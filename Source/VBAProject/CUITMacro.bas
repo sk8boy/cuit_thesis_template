@@ -579,6 +579,7 @@ Public Sub InsertAlgorithmTbl_RibbonFun(ByVal control As IRibbonControl)
         .Font.Bold = False
         .Font.Size = 9
     End With
+    ur.EndCustomRecord
     Exit Sub
 ERROR_HANDLER:
     MsgBox "发生错误: " & vbCrLf & vbCrLf & Err.Description, vbCritical, C_TITLE
@@ -3900,7 +3901,12 @@ Public Sub RemoveSpaces_RibbonFun(ByVal control As IRibbonControl)
     Dim rng As Range
     Dim i As Long, j As Long, k As Long
     Dim prevChar As String, nextChar As String
-    Dim isChinesePrev As Boolean, isChineseNext As Boolean, foundSpace As Boolean
+    Dim isChinesePrev As Boolean, isChineseNext As Boolean, foundSpace As Boolean 
+    Dim ur As UndoRecord
+    
+    On Error GoTo ERROR_HANDLER
+    Set ur = Application.UndoRecord
+    ur.StartCustomRecord "删除中英文字符间的空格"
     
     Set rng = Selection.Range
     If rng.text = "" Then
@@ -3932,6 +3938,14 @@ Public Sub RemoveSpaces_RibbonFun(ByVal control As IRibbonControl)
             foundSpace = False
         End If
     Next i
+
+    Application.ScreenRefresh
+    ur.EndCustomRecord
+    Exit Sub ' 正常退出点，避免进入错误处理程序
+    
+ERROR_HANDLER:
+    MsgBox "发生错误: " & vbCrLf & vbCrLf & Err.Description, vbCritical, C_TITLE
+    If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
 ' 辅助函数：判断是否为中文字符
