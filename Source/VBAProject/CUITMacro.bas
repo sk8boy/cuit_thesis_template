@@ -47,7 +47,7 @@ Public Sub UpdatePages_RibbonFun(ByVal control As IRibbonControl)
     ' 初始化搜索范围
     Set rng = ActiveDocument.Content
     rng.Find.ClearFormatting
-    rng.Find.Style = ActiveDocument.Styles("论文标题1")
+    rng.Find.Style = ActiveDocument.Styles("标题 1")
     
     ' 执行搜索（结合关键字和样式）
     With rng.Find
@@ -74,7 +74,7 @@ Public Sub UpdatePages_RibbonFun(ByVal control As IRibbonControl)
             Application.ScreenRefresh
             ur.EndCustomRecord
         Else
-            MsgBox "未找到符合关键字 '" & keyword & "' 且样式为 '" & ActiveDocument.Styles("论文标题1") & "' 的段落！", vbExclamation, C_TITLE
+            MsgBox "未找到符合关键字 '" & keyword & "' 且样式为 '" & ActiveDocument.Styles("标题 1") & "' 的段落！", vbExclamation, C_TITLE
         End If
     End With
     Exit Sub ' 正常退出点，避免进入错误处理程序
@@ -216,7 +216,7 @@ Public Sub InsertPicNo_RibbonFun(ByVal control As IRibbonControl)
         Set aField = currentRange.Fields.Add(currentRange, wdFieldEmpty, "SEQ 图 \* ARABIC \s 1", False)
         Set aRange = .Range(currentRange.End, currentRange.End)
         aRange.text = "."
-        Set bField = aRange.Fields.Add(currentRange, wdFieldEmpty, "STYLEREF ""论文标题1"" \s", False)
+        Set bField = aRange.Fields.Add(currentRange, wdFieldEmpty, "STYLEREF ""标题 1"" \s", False)
     End With
     Selection.TypeText " "
     If Not ApplyParaStyle("论文图题", 0, False) Then Err.Raise ERR_CANCEL
@@ -246,7 +246,7 @@ Public Sub InsertTblNo_RibbonFun(ByVal control As IRibbonControl)
         Set aField = currentRange.Fields.Add(currentRange, wdFieldEmpty, "SEQ 表 \* ARABIC \s 1", False)
         Set aRange = .Range(currentRange.End, currentRange.End)
         aRange.text = "."
-        Set bField = aRange.Fields.Add(currentRange, wdFieldEmpty, "STYLEREF ""论文标题1"" \s", False)
+        Set bField = aRange.Fields.Add(currentRange, wdFieldEmpty, "STYLEREF ""标题 1"" \s", False)
     End With
     Selection.TypeText " "
     If Not ApplyParaStyle("论文表题", 0, False) Then Err.Raise ERR_CANCEL
@@ -278,7 +278,7 @@ Public Sub InsertDefNo_RibbonFun(ByVal control As IRibbonControl)
         Set aField = currentRange.Fields.Add(currentRange, wdFieldEmpty, "SEQ 定义 \* ARABIC \s 1", False)
         Set aRange = .Range(currentRange.End, currentRange.End)
         aRange.text = "."
-        Set bField = aRange.Fields.Add(currentRange, wdFieldEmpty, "STYLEREF ""论文标题1"" \s", False)
+        Set bField = aRange.Fields.Add(currentRange, wdFieldEmpty, "STYLEREF ""标题 1"" \s", False)
     End With
     Selection.TypeText "："
     currentPos = Selection.Range.Start
@@ -319,7 +319,7 @@ Public Sub InsertTheoremNo_RibbonFun(ByVal control As IRibbonControl)
         Set aField = currentRange.Fields.Add(currentRange, wdFieldEmpty, "SEQ 定理 \* ARABIC \s 1", False)
         Set aRange = .Range(currentRange.End, currentRange.End)
         aRange.text = "."
-        Set bField = aRange.Fields.Add(currentRange, wdFieldEmpty, "STYLEREF ""论文标题1"" \s", False)
+        Set bField = aRange.Fields.Add(currentRange, wdFieldEmpty, "STYLEREF ""标题 1"" \s", False)
     End With
     Selection.TypeText "："
     currentPos = Selection.Range.Start
@@ -360,7 +360,7 @@ Public Sub InsertCorollaryNo_RibbonFun(ByVal control As IRibbonControl)
         Set aField = currentRange.Fields.Add(currentRange, wdFieldEmpty, "SEQ 推论 \* ARABIC \s 1", False)
         Set aRange = .Range(currentRange.End, currentRange.End)
         aRange.text = "."
-        Set bField = aRange.Fields.Add(currentRange, wdFieldEmpty, "STYLEREF ""论文标题1"" \s", False)
+        Set bField = aRange.Fields.Add(currentRange, wdFieldEmpty, "STYLEREF ""标题 1"" \s", False)
     End With
     Selection.TypeText "："
     currentPos = Selection.Range.Start
@@ -401,7 +401,7 @@ Public Sub InsertLemmaNo_RibbonFun(ByVal control As IRibbonControl)
         Set aField = currentRange.Fields.Add(currentRange, wdFieldEmpty, "SEQ 引理 \* ARABIC \s 1", False)
         Set aRange = .Range(currentRange.End, currentRange.End)
         aRange.text = "."
-        Set bField = aRange.Fields.Add(currentRange, wdFieldEmpty, "STYLEREF ""论文标题1"" \s", False)
+        Set bField = aRange.Fields.Add(currentRange, wdFieldEmpty, "STYLEREF ""标题 1"" \s", False)
     End With
     Selection.TypeText "："
     currentPos = Selection.Range.Start
@@ -442,7 +442,7 @@ Public Sub InsertProblemNo_RibbonFun(ByVal control As IRibbonControl)
         Set aField = currentRange.Fields.Add(currentRange, wdFieldEmpty, "SEQ 问题 \* ARABIC \s 1", False)
         Set aRange = .Range(currentRange.End, currentRange.End)
         aRange.text = "."
-        Set bField = aRange.Fields.Add(currentRange, wdFieldEmpty, "STYLEREF ""论文标题1"" \s", False)
+        Set bField = aRange.Fields.Add(currentRange, wdFieldEmpty, "STYLEREF ""标题 1"" \s", False)
     End With
     Selection.TypeText "："
     currentPos = Selection.Range.Start
@@ -483,7 +483,7 @@ Public Sub InsertConclusionNo_RibbonFun(ByVal control As IRibbonControl)
         Set aField = currentRange.Fields.Add(currentRange, wdFieldEmpty, "SEQ 结论 \* ARABIC \s 1", False)
         Set aRange = .Range(currentRange.End, currentRange.End)
         aRange.text = "."
-        Set bField = aRange.Fields.Add(currentRange, wdFieldEmpty, "STYLEREF ""论文标题1"" \s", False)
+        Set bField = aRange.Fields.Add(currentRange, wdFieldEmpty, "STYLEREF ""标题 1"" \s", False)
     End With
     Selection.TypeText "："
     currentPos = Selection.Range.Start
@@ -605,7 +605,7 @@ Private Sub InsertAlgorithmNo()
         Set aField = currentRange.Fields.Add(currentRange, wdFieldEmpty, "SEQ 算法 \* ARABIC \s 1", False)
         Set aRange = .Range(currentRange.End, currentRange.End)
         aRange.text = "."
-        Set bField = aRange.Fields.Add(currentRange, wdFieldEmpty, "STYLEREF ""论文标题1"" \s", False)
+        Set bField = aRange.Fields.Add(currentRange, wdFieldEmpty, "STYLEREF ""标题 1"" \s", False)
     End With
     Selection.TypeText " "
     If Not ApplyParaStyle("论文算法标题", 0, False) Then Err.Raise ERR_CANCEL
@@ -631,7 +631,7 @@ Public Sub H1_RibbonFun(control As IRibbonControl)
     On Error GoTo ERROR_HANDLER
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "应用标题1样式"
-    If Not ApplyParaStyle("论文标题1", 0, False) Then Err.Raise ERR_CANCEL
+    If Not ApplyParaStyle("标题 1", 0, False) Then Err.Raise ERR_CANCEL
     Application.ScreenRefresh
     ur.EndCustomRecord
     Exit Sub ' 正常退出点，避免进入错误处理程序
@@ -652,7 +652,7 @@ Public Sub H2_RibbonFun(control As IRibbonControl)
     On Error GoTo ERROR_HANDLER
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "应用标题2样式"
-    If Not ApplyParaStyle("论文标题2", 0, False) Then Err.Raise ERR_CANCEL
+    If Not ApplyParaStyle("标题 2", 0, False) Then Err.Raise ERR_CANCEL
     Application.ScreenRefresh
     ur.EndCustomRecord
     Exit Sub ' 正常退出点，避免进入错误处理程序
@@ -674,7 +674,7 @@ Public Sub H3_RibbonFun(control As IRibbonControl)
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "应用标题3样式"
     'Apply the built-in Heading 3 style (paragraph style)
-    If Not ApplyParaStyle("论文标题3", 0, False) Then Err.Raise ERR_CANCEL
+    If Not ApplyParaStyle("标题 3", 0, False) Then Err.Raise ERR_CANCEL
     Application.ScreenRefresh
     ur.EndCustomRecord
     Exit Sub ' 正常退出点，避免进入错误处理程序
@@ -696,7 +696,7 @@ Public Sub H4_RibbonFun(control As IRibbonControl)
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "应用标题4样式"
     'Apply the built-in Heading 4 style (paragraph style)
-    If Not ApplyParaStyle("论文标题4", 0, False) Then Err.Raise ERR_CANCEL
+    If Not ApplyParaStyle("标题 4", 0, False) Then Err.Raise ERR_CANCEL
     Application.ScreenRefresh
     ur.EndCustomRecord
     Exit Sub ' 正常退出点，避免进入错误处理程序
@@ -718,7 +718,7 @@ Public Sub H5_RibbonFun(control As IRibbonControl)
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "应用标题5样式"
     'Apply the built-in Heading 5 style (paragraph style)
-    If Not ApplyParaStyle("论文标题5", 0, False) Then Err.Raise ERR_CANCEL
+    If Not ApplyParaStyle("标题 5", 0, False) Then Err.Raise ERR_CANCEL
     Application.ScreenRefresh
     ur.EndCustomRecord
     Exit Sub ' 正常退出点，避免进入错误处理程序
@@ -741,7 +741,7 @@ Public Sub H6_RibbonFun(control As IRibbonControl)
     ur.StartCustomRecord "应用标题6样式"
     Set SaveRange = Selection.Range
     'Apply the built-in Heading 6 style (paragraph style)
-    If Not ApplyParaStyle("论文标题6", 0, False) Then Err.Raise ERR_CANCEL
+    If Not ApplyParaStyle("标题 6", 0, False) Then Err.Raise ERR_CANCEL
     Application.ScreenRefresh
     ur.EndCustomRecord
     Exit Sub ' 正常退出点，避免进入错误处理程序
@@ -1488,7 +1488,7 @@ Private Sub CheckEnsureStyles()
             .QuickStyle = True
         End With
     End If
-    If AddMissingStyle("论文标题1", wdStyleTypeParagraph, objStyle) Then
+    If AddMissingStyle("标题 1", wdStyleTypeParagraph, objStyle) Then
         With objStyle
             .BaseStyle = wdStyleNormal
             .NextParagraphStyle = "论文正文"
@@ -1508,10 +1508,10 @@ Private Sub CheckEnsureStyles()
             .Font.Bold = False
             .Font.Size = 15
             .QuickStyle = True
-            ListGalleries(wdOutlineNumberGallery).ListTemplates(1).ListLevels(1).LinkedStyle = "论文标题1"
+            ListGalleries(wdOutlineNumberGallery).ListTemplates(1).ListLevels(1).LinkedStyle = "标题 1"
         End With
     End If
-    If AddMissingStyle("论文标题2", wdStyleTypeParagraph, objStyle) Then
+    If AddMissingStyle("标题 2", wdStyleTypeParagraph, objStyle) Then
         With objStyle
             .BaseStyle = wdStyleNormal
             .NextParagraphStyle = "论文正文"
@@ -1530,10 +1530,10 @@ Private Sub CheckEnsureStyles()
             .Font.Bold = False
             .Font.Size = 14
             .QuickStyle = True
-            ListGalleries(wdOutlineNumberGallery).ListTemplates(1).ListLevels(2).LinkedStyle = "论文标题2"
+            ListGalleries(wdOutlineNumberGallery).ListTemplates(1).ListLevels(2).LinkedStyle = "标题 2"
         End With
     End If
-    If AddMissingStyle("论文标题3", wdStyleTypeParagraph, objStyle) Then
+    If AddMissingStyle("标题 3", wdStyleTypeParagraph, objStyle) Then
         With objStyle
             .BaseStyle = wdStyleNormal
             .NextParagraphStyle = "论文正文"
@@ -1552,10 +1552,10 @@ Private Sub CheckEnsureStyles()
             .Font.Bold = False
             .Font.Size = 12
             .QuickStyle = True
-            ListGalleries(wdOutlineNumberGallery).ListTemplates(1).ListLevels(3).LinkedStyle = "论文标题3"
+            ListGalleries(wdOutlineNumberGallery).ListTemplates(1).ListLevels(3).LinkedStyle = "标题 3"
         End With
     End If
-    If AddMissingStyle("论文标题4", wdStyleTypeParagraph, objStyle) Then
+    If AddMissingStyle("标题 4", wdStyleTypeParagraph, objStyle) Then
         With objStyle
             .BaseStyle = wdStyleNormal
             .NextParagraphStyle = "论文正文"
@@ -1574,10 +1574,10 @@ Private Sub CheckEnsureStyles()
             .Font.Bold = True
             .Font.Size = 12
             .QuickStyle = True
-            ListGalleries(wdOutlineNumberGallery).ListTemplates(1).ListLevels(4).LinkedStyle = "论文标题4"
+            ListGalleries(wdOutlineNumberGallery).ListTemplates(1).ListLevels(4).LinkedStyle = "标题 4"
         End With
     End If
-    If AddMissingStyle("论文标题5", wdStyleTypeParagraph, objStyle) Then
+    If AddMissingStyle("标题 5", wdStyleTypeParagraph, objStyle) Then
         With objStyle
             .BaseStyle = wdStyleNormal
             .NextParagraphStyle = "论文正文"
@@ -1596,10 +1596,10 @@ Private Sub CheckEnsureStyles()
             .Font.Bold = False
             .Font.Size = 12
             .QuickStyle = True
-            ListGalleries(wdOutlineNumberGallery).ListTemplates(1).ListLevels(5).LinkedStyle = "论文标题5"
+            ListGalleries(wdOutlineNumberGallery).ListTemplates(1).ListLevels(5).LinkedStyle = "标题 5"
         End With
     End If
-    If AddMissingStyle("论文标题6", wdStyleTypeParagraph, objStyle) Then
+    If AddMissingStyle("标题 6", wdStyleTypeParagraph, objStyle) Then
         With objStyle
             .BaseStyle = wdStyleNormal
             .NextParagraphStyle = "论文正文"
@@ -1619,7 +1619,7 @@ Private Sub CheckEnsureStyles()
             .Font.Italic = True
             .Font.Size = 12
             .QuickStyle = True
-            ListGalleries(wdOutlineNumberGallery).ListTemplates(1).ListLevels(6).LinkedStyle = "论文标题6"
+            ListGalleries(wdOutlineNumberGallery).ListTemplates(1).ListLevels(6).LinkedStyle = "标题 6"
         End With
     End If
 
