@@ -14,7 +14,7 @@ Public otherTeacherTitle As String
 Public mathTypeFound As Boolean
 Public axMathFound As Boolean
 
-Const Version = "v1.0.4"
+Const Version = "v1.0.5"
 
 Const TEXT_GithubUrl = "https://github.com/sk8boy/cuit_thesis_template"
 Const TEXT_GiteeUrl = "https://gitee.com/tiejunwang/cuit_thesis_template"
@@ -584,6 +584,10 @@ Public Sub InsertAlgorithmTbl_RibbonFun(ByVal control As IRibbonControl)
 ERROR_HANDLER:
     MsgBox "·¢Éú´íÎó: " & vbCrLf & vbCrLf & Err.Description, vbCritical, C_TITLE
     If Not (ur Is Nothing) Then ur.EndCustomRecord
+End Sub
+
+Public Sub InsertAlgorithmNo_RibbonFun(ByVal control As IRibbonControl)
+    InsertAlgorithmNo
 End Sub
 
 Private Sub InsertAlgorithmNo()
