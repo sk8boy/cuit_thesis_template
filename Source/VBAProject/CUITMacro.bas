@@ -14,7 +14,7 @@ Public otherTeacherTitle As String
 Public mathTypeFound As Boolean
 Public axMathFound As Boolean
 
-Const Version = "v1.1.0"
+Const Version = "v1.2.0"
 
 Const TEXT_GithubUrl = "https://github.com/sk8boy/cuit_thesis_template"
 Const TEXT_GiteeUrl = "https://gitee.com/tiejunwang/cuit_thesis_template"
@@ -80,7 +80,7 @@ Public Sub UpdatePages_RibbonFun(ByVal control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    MsgBox "更新论文正文页数时出错: " & vbCrLf & vbCrLf & Err.Description, vbCritical, C_TITLE
+    ShowErrorMsg Err, "更新论文正文页数时出错: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -158,7 +158,6 @@ Public Sub InsertChapterSep(ByVal control As IRibbonControl)
     
 End Sub
 
-
 ' 辅助函数：获取SEQ字段的当前值
 Private Function GetSEQValue(seqIdentifier As String) As Integer
     Dim doc As Document
@@ -227,7 +226,7 @@ Public Sub InsertPicNo_RibbonFun(ByVal control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    MsgBox "发生错误: " & vbCrLf & vbCrLf & Err.Description, vbCritical, C_TITLE
+    ShowErrorMsg Err, "插入图编号时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -257,7 +256,7 @@ Public Sub InsertTblNo_RibbonFun(ByVal control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    MsgBox "发生错误: " & vbCrLf & vbCrLf & Err.Description, vbCritical, C_TITLE
+    ShowErrorMsg Err, "插入表编号时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -296,7 +295,7 @@ Public Sub InsertDefNo_RibbonFun(ByVal control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    MsgBox "发生错误: " & vbCrLf & vbCrLf & Err.Description, vbCritical, C_TITLE
+    ShowErrorMsg Err, "插入自定义编号时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -337,7 +336,7 @@ Public Sub InsertTheoremNo_RibbonFun(ByVal control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    MsgBox "发生错误: " & vbCrLf & vbCrLf & Err.Description, vbCritical, C_TITLE
+    ShowErrorMsg Err, "插入定理编号时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -378,7 +377,7 @@ Public Sub InsertCorollaryNo_RibbonFun(ByVal control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    MsgBox "发生错误: " & vbCrLf & vbCrLf & Err.Description, vbCritical, C_TITLE
+    ShowErrorMsg Err, "插入推论编号时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -419,7 +418,7 @@ Public Sub InsertLemmaNo_RibbonFun(ByVal control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    MsgBox "发生错误: " & vbCrLf & vbCrLf & Err.Description, vbCritical, C_TITLE
+    ShowErrorMsg Err, "插入引理编号时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -460,7 +459,7 @@ Public Sub InsertProblemNo_RibbonFun(ByVal control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    MsgBox "发生错误: " & vbCrLf & vbCrLf & Err.Description, vbCritical, C_TITLE
+    ShowErrorMsg Err, "插入问题编号时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -501,7 +500,7 @@ Public Sub InsertConclusionNo_RibbonFun(ByVal control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    MsgBox "发生错误: " & vbCrLf & vbCrLf & Err.Description, vbCritical, C_TITLE
+    MShowErrorMsg Err, "插入结论编号时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -582,7 +581,7 @@ Public Sub InsertAlgorithmTbl_RibbonFun(ByVal control As IRibbonControl)
     ur.EndCustomRecord
     Exit Sub
 ERROR_HANDLER:
-    MsgBox "发生错误: " & vbCrLf & vbCrLf & Err.Description, vbCritical, C_TITLE
+    ShowErrorMsg Err, "插入算法时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -620,7 +619,7 @@ Private Sub InsertAlgorithmNo()
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    MsgBox "发生错误: " & vbCrLf & vbCrLf & Err.Description, vbCritical, C_TITLE
+    ShowErrorMsg Err, "插入算法编号时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -641,11 +640,7 @@ Public Sub H1_RibbonFun(control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    If Err.Number = ERR_USRMSG Then
-        MsgBox Err.Description, vbExclamation, C_TITLE
-    ElseIf Err.Number <> ERR_CANCEL Then
-        MsgBox "应用标题1样式时发生错误: " & Err.Description, vbCritical, C_TITLE
-    End If
+    ShowErrorMsg Err, "应用标题1样式时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -662,11 +657,7 @@ Public Sub H2_RibbonFun(control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    If Err.Number = ERR_USRMSG Then
-        MsgBox Err.Description, vbExclamation, C_TITLE
-    ElseIf Err.Number <> ERR_CANCEL Then
-        MsgBox "应用标题2样式时发生错误: " & Err.Description, vbCritical, C_TITLE
-    End If
+    ShowErrorMsg Err, "应用标题2样式时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -684,11 +675,7 @@ Public Sub H3_RibbonFun(control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    If Err.Number = ERR_USRMSG Then
-        MsgBox Err.Description, vbExclamation, C_TITLE
-    ElseIf Err.Number <> ERR_CANCEL Then
-        MsgBox "应用标题3样式时发生错误: " & Err.Description, vbCritical, C_TITLE
-    End If
+    ShowErrorMsg Err, "应用标题3样式时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -706,11 +693,7 @@ Public Sub H4_RibbonFun(control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    If Err.Number = ERR_USRMSG Then
-        MsgBox Err.Description, vbExclamation, C_TITLE
-    ElseIf Err.Number <> ERR_CANCEL Then
-        MsgBox "应用标题4样式时发生错误: " & Err.Description, vbCritical, C_TITLE
-    End If
+    ShowErrorMsg Err, "应用标题4样式时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -728,11 +711,7 @@ Public Sub H5_RibbonFun(control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    If Err.Number = ERR_USRMSG Then
-        MsgBox Err.Description, vbExclamation, C_TITLE
-    ElseIf Err.Number <> ERR_CANCEL Then
-        MsgBox "应用标题5样式时发生错误: " & Err.Description, vbCritical, C_TITLE
-    End If
+    ShowErrorMsg Err, "应用标题5样式时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -751,11 +730,7 @@ Public Sub H6_RibbonFun(control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    If Err.Number = ERR_USRMSG Then
-        MsgBox Err.Description, vbExclamation, C_TITLE
-    ElseIf Err.Number <> ERR_CANCEL Then
-        MsgBox "应用标题1样式时发生错误: " & Err.Description, vbCritical, C_TITLE
-    End If
+    ShowErrorMsg Err, "应用标题6样式时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -773,11 +748,7 @@ Public Sub MakeBulletItem_RibbonFun(control As IRibbonControl)
     Exit Sub
     
 ERROR_HANDLER:
-    If Err.Number = ERR_USRMSG Then
-        MsgBox Err.Description, vbExclamation, C_TITLE
-    ElseIf Err.Number <> ERR_CANCEL Then
-        MsgBox "应用论文无序列表时出错: " & Err.Description, vbCritical, C_TITLE
-    End If
+    ShowErrorMsg Err, "应用无序列表样式时出错: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -795,11 +766,7 @@ Public Sub MakeNumNoIndentItem_RibbonFun(control As IRibbonControl)
     Exit Sub
     
 ERROR_HANDLER:
-    If Err.Number = ERR_USRMSG Then
-        MsgBox Err.Description, vbExclamation, C_TITLE
-    ElseIf Err.Number <> ERR_CANCEL Then
-        MsgBox "应用论文无缩序号时出错: " & Err.Description, vbCritical, C_TITLE
-    End If
+    ShowErrorMsg Err, "应用无缩序号样式时出错: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -818,11 +785,7 @@ Public Sub MakeNumItem_RibbonFun(control As IRibbonControl)
     Exit Sub
     
 ERROR_HANDLER:
-    If Err.Number = ERR_USRMSG Then
-        MsgBox Err.Description, vbExclamation, C_TITLE
-    ElseIf Err.Number <> ERR_CANCEL Then
-        MsgBox "应用论文有序列表时出错: " & Err.Description, vbCritical, C_TITLE
-    End If
+    ShowErrorMsg Err, "应用有序列表样式时出错: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -853,11 +816,7 @@ Public Sub ListLevelUp_RibbonFun(control As IRibbonControl)
     Exit Sub
     
 ERROR_HANDLER:
-    If Err.Number = ERR_USRMSG Then
-        MsgBox Err.Description, vbExclamation, C_TITLE
-    ElseIf Err.Number <> ERR_CANCEL Then
-        MsgBox "尝试提升列表级别时出错: " & Err.Description, vbCritical, C_TITLE
-    End If
+    ShowErrorMsg Err, "尝试提升列表级别时出错: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -891,11 +850,7 @@ Public Sub ListLevelDown_RibbonFun(control As IRibbonControl)
     Exit Sub
     
 ERROR_HANDLER:
-    If Err.Number = ERR_USRMSG Then
-        MsgBox Err.Description, vbExclamation, C_TITLE
-    ElseIf Err.Number <> ERR_CANCEL Then
-        MsgBox "尝试降低列表级别时出错: " & Err.Description, vbCritical, C_TITLE
-    End If
+    ShowErrorMsg Err, "尝试降低列表级别时出错: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -925,11 +880,7 @@ Public Sub RestartNumbering_RibbonFun(control As IRibbonControl)
     Exit Sub
     
 ERROR_HANDLER:
-    If Err.Number = ERR_USRMSG Then
-        MsgBox Err.Description, vbExclamation, C_TITLE
-    ElseIf Err.Number <> ERR_CANCEL Then
-        MsgBox "切换序号时出错: " & Err.Description & vbCrLf & "(当使用自定义序号时，该功能可能会失效)", vbCritical, C_TITLE
-    End If
+    ShowErrorMsg Err, "切换序号时出错: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -981,7 +932,7 @@ Public Sub RestorePageSetup()
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    MsgBox "检查页面设置时发生错误: " & vbCrLf & vbCrLf & Err.Description, vbCritical, C_TITLE
+    ShowErrorMsg Err, "检查论文页面设置时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -1710,7 +1661,7 @@ Private Sub CheckEnsureStyles()
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    MsgBox "检查并恢复缺失的样式时出错: " & vbCrLf & vbCrLf & Err.Description, vbCritical, C_TITLE
+    ShowErrorMsg Err, "检查并恢复缺失的样式时出错: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -1826,11 +1777,8 @@ Private Function ApplyParaStyle(ByVal StyleName As String, ByVal BuiltInStyleID 
     Exit Function
     
 ERROR_HANDLER:
-    If Err.Number = ERR_USRMSG Then
-        MsgBox Err.Description, vbExclamation, C_TITLE
-    ElseIf Err.Number <> ERR_CANCEL Then
-        MsgBox "应用段落样式时发生错误: " & Err.Description, vbCritical, C_TITLE
-    End If
+    ShowErrorMsg Err, "应用段落样式时发生错误: "
+    If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Function
 
 Private Function ApplyCharStyle(ByVal StyleName As String, ByVal BuiltInStyleID As Integer) As Boolean
@@ -1862,11 +1810,8 @@ Private Function ApplyCharStyle(ByVal StyleName As String, ByVal BuiltInStyleID 
     Exit Function
     
 ERROR_HANDLER:
-    If Err.Number = ERR_USRMSG Then
-        MsgBox Err.Description, vbExclamation, C_TITLE
-    ElseIf Err.Number <> ERR_CANCEL Then
-        MsgBox "应用字符样式时发生错误: " & Err.Description, vbCritical, C_TITLE
-    End If
+    ShowErrorMsg Err, "应用字符样式时发生错误: "
+    If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Function
 
 Public Sub LoadCuitRibbon_RibbonFun(IRibbon As IRibbonUI)
@@ -2014,11 +1959,7 @@ Public Sub MakeStandard_RibbonFun(control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    If Err.Number = ERR_USRMSG Then
-        MsgBox Err.Description, vbExclamation, C_TITLE
-    ElseIf Err.Number <> ERR_CANCEL Then
-        MsgBox "应用正文样式时发生错误: " & Err.Description, vbCritical, C_TITLE
-    End If
+    ShowErrorMsg Err, "应用正文样式时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -2724,11 +2665,7 @@ CleanExit:
     Exit Function
     
 ERROR_HANDLER:
-    If Err.Number = ERR_USRMSG Then
-        MsgBox Err.Description, vbExclamation, C_TITLE
-    ElseIf Err.Number <> ERR_CANCEL Then
-        MsgBox "插入交叉引用时发生错误: " & Err.Description, vbCritical, C_TITLE
-    End If
+    ShowErrorMsg Err, "插入交叉引用时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Function
 
@@ -3901,73 +3838,377 @@ errHandle:
     End If
 End Sub
 
+' 在选中段落或整个文档中，删除中英文字符间、段落开始前、段落结束后、中文标点前后的空格（不会删除英文间的空格）
 Public Sub RemoveSpaces_RibbonFun(ByVal control As IRibbonControl)
-    Dim rng As Range
-    Dim i As Long, j As Long, k As Long
-    Dim prevChar As String, nextChar As String
-    Dim isChinesePrev As Boolean, isChineseNext As Boolean, foundSpace As Boolean 
+    Dim myRange As Range
+    Dim response As VbMsgBoxResult
     Dim ur As UndoRecord
     
     On Error GoTo ERROR_HANDLER
     Set ur = Application.UndoRecord
-    ur.StartCustomRecord "删除中英文字符间的空格"
+    ur.StartCustomRecord "删除多余空格"
     
-    Set rng = Selection.Range
-    If rng.text = "" Then
-        Exit Sub
-    End If
-    
-    ' 从后往前处理避免索引变化
-    For i = rng.Characters.Count - 1 To 2 Step -1
-        j = i
-        Do While rng.Characters(j).text = " "
-            j = j - 1
-            foundSpace = True
-        Loop
-        
-        If foundSpace Then
-            prevChar = rng.Characters(j).text
-            nextChar = rng.Characters(i + 1).text
-            
-            isChinesePrev = IsChineseCharacter(prevChar)
-            isChineseNext = IsChineseCharacter(nextChar)
-            
-            ' 如果两端不同或者都为中文，则删除连续的空格
-            If (isChinesePrev <> isChineseNext) Or (isChinesePrev And isChineseNext) Then
-                For k = i To j + 1 Step -1
-                    rng.Characters(k).text = ""
-                Next k
-            End If
-            i = j + 1
-            foundSpace = False
+    ' 判断是否有选中文本
+    If Selection.Type <> wdSelectionIP Then
+        ' 如果有选中文本，只在选区内操作
+        Set myRange = Selection.Range
+    Else
+        ' 如果没有选中文本，在整个文档操作
+        Set myRange = ActiveDocument.Content
+        Response = MsgBox("没有选中文本，将在整个文档中清理空格。" & vbCrLf & _
+                         "是否继续？", vbQuestion + vbYesNoCancel, "确认继续操作")
+        ' 检查用户选择
+        If Response = vbCancel Or Response = vbNo Then
+            ur.EndCustomRecord
+            Exit Sub
         End If
-    Next i
+    End If
 
+    ' 删除中文文本中英文单词间的空格（中英文混排时）
+    With myRange.Find
+        .ClearFormatting
+        .Replacement.ClearFormatting
+        .Text = "([!一-龠 ，。！？；：（）【】《》、“”‘’])([ ]@)([一-龠，。！？；：“”‘’（）【】《》、])"  ' 非中文字母字符+空格+中文字符
+        .Replacement.Text = "\1\3"  ' 删除空格
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Format = False
+        .MatchCase = False
+        .MatchWholeWord = False
+        .MatchWildcards = True
+        .MatchSoundsLike = False
+        .MatchAllWordForms = False
+        .Execute Replace:=wdReplaceAll
+    End With
+    
+    With myRange.Find
+        .ClearFormatting
+        .Replacement.ClearFormatting
+        .Text = "([一-龠，。！？；：（）【】《》、“”‘’])([ ]@)([!一-龠 ，。！？；：“”‘’（）【】《》、])"  ' 中文字符+空格+非中文字母字符
+        .Replacement.Text = "\1\3"  ' 删除空格
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Format = False
+        .MatchCase = False
+        .MatchWholeWord = False
+        .MatchWildcards = True
+        .MatchSoundsLike = False
+        .MatchAllWordForms = False
+        .Execute Replace:=wdReplaceAll
+    End With
+    
+    ' 删除中文标点符号前的空格
+    With myRange.Find
+        .ClearFormatting
+        .Replacement.ClearFormatting
+        .Text = "([ ]@)([，。！？；：（）【】《》、“”‘’])"  ' 空格+中文标点
+        .Replacement.Text = "\2"  ' 删除空格
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Format = False
+        .MatchCase = False
+        .MatchWholeWord = False
+        .MatchWildcards = True
+        .MatchSoundsLike = False
+        .MatchAllWordForms = False
+        .Execute Replace:=wdReplaceAll
+    End With
+    
+    ' 删除中文标点符号后的空格（除了某些英文标点后可能需要空格的情况）
+    With myRange.Find
+        .ClearFormatting
+        .Replacement.ClearFormatting
+        .Text = "([，。！？；：（）【】《》、“”‘’])([ ]@)"  ' 中文标点+空格
+        .Replacement.Text = "\1"  ' 删除空格
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Format = False
+        .MatchCase = False
+        .MatchWholeWord = False
+        .MatchWildcards = True
+        .MatchSoundsLike = False
+        .MatchAllWordForms = False
+        .Execute Replace:=wdReplaceAll
+    End With
+    
+    ' 删除行首空格
+    With myRange.Find
+        .ClearFormatting
+        .Replacement.ClearFormatting
+        .Text = "^13[ ]@"  ' 段落标记后的空格
+        .Replacement.Text = "^13"  ' 只保留段落标记
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Format = False
+        .MatchCase = False
+        .MatchWholeWord = False
+        .MatchWildcards = True
+        .MatchSoundsLike = False
+        .MatchAllWordForms = False
+        .Execute Replace:=wdReplaceAll
+    End With
+    
+    ' 删除行尾空格
+    With myRange.Find
+        .ClearFormatting
+        .Replacement.ClearFormatting
+        .Text = "[ ]@^13"  ' 空格+段落标记
+        .Replacement.Text = "^13"  ' 只保留段落标记
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Format = False
+        .MatchCase = False
+        .MatchWholeWord = False
+        .MatchWildcards = True
+        .MatchSoundsLike = False
+        .MatchAllWordForms = False
+        .Execute Replace:=wdReplaceAll
+    End With
+    
+        ' 删除行首空格
+    With myRange.Find
+        .ClearFormatting
+        .Replacement.ClearFormatting
+        .Text = "^l[ ]@"  ' 段落标记后的空格
+        .Replacement.Text = "^l"  ' 只保留段落标记
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Format = False
+        .MatchCase = False
+        .MatchWholeWord = False
+        .MatchWildcards = True
+        .MatchSoundsLike = False
+        .MatchAllWordForms = False
+        .Execute Replace:=wdReplaceAll
+    End With
+    
+    ' 删除行尾空格
+    With myRange.Find
+        .ClearFormatting
+        .Replacement.ClearFormatting
+        .Text = "[ ]@^l"  ' 空格+段落标记
+        .Replacement.Text = "^l"  ' 只保留段落标记
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Format = False
+        .MatchCase = False
+        .MatchWholeWord = False
+        .MatchWildcards = True
+        .MatchSoundsLike = False
+        .MatchAllWordForms = False
+        .Execute Replace:=wdReplaceAll
+    End With
+    
+    MsgBox "多余空格清理完成！"
     Application.ScreenRefresh
     ur.EndCustomRecord
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    MsgBox "发生错误: " & vbCrLf & vbCrLf & Err.Description, vbCritical, C_TITLE
+    ShowErrorMsg Err, "删除多余空格时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
-' 辅助函数：判断是否为中文字符
-Private Function IsChineseCharacter(char As String) As Boolean
-    Dim charCode As Long
+' 在选中段落或整个文档中，使用中文标点替换中文字符间的英文标点
+Public Sub ReplacePunctuationInChinese_RibbonFun(ByVal control As IRibbonControl)
+    Dim myRange As Range
+    Dim response As VbMsgBoxResult
+    Dim ur As UndoRecord
     
-    charCode = AscW(char)
-    If charCode < 0 Then charCode = charCode And 65535
-    ' 基本汉字 + 标点 + 全角符号 + 扩展汉字
-    If (charCode >= CLng(&H4E00) And charCode <= (CLng(&H9FFF) And 65535)) Or _
-       (charCode >= CLng(&H3000) And charCode <= CLng(&H303F)) Or _
-       (charCode >= (CLng(&HFF00) And 65535) And charCode <= (CLng(&HFFEF) And 65535)) Or _
-       (charCode >= CLng(&H3400) And charCode <= CLng(&H4DBF)) Or _
-       (charCode >= CLng(&H20000) And charCode <= CLng(&H2FFFF)) Then
-        IsChineseCharacter = True
+    On Error GoTo ERROR_HANDLER
+    Set ur = Application.UndoRecord
+    ur.StartCustomRecord "替换英文标点"
+    
+    ' 判断是否有选中文本
+    If Selection.Type <> wdSelectionIP Then
+        Set myRange = Selection.Range
     Else
-        IsChineseCharacter = False
+        Set myRange = ActiveDocument.Content
+        Response = MsgBox("没有选中文本，将在整个文档中替换英文标点。" & vbCrLf & _
+                         "是否继续？", vbQuestion + vbYesNoCancel, "确认继续操作")
+        ' 检查用户选择
+        If Response = vbCancel Or Response = vbNo Then
+            ur.EndCustomRecord
+            Exit Sub
+        End If
+    End If
+    
+    ' 定义要替换的标点对
+    Dim punctPairs As Variant
+    punctPairs = Array( _
+        ",", "，", _
+        ".", "。", _
+        "\?", "？", _
+        "\!", "！", _
+        ":", "：", _
+        ";", "；" _
+    )
+    
+    ' 逐个替换标点（在中文字符上下文中的）
+    Dim i As Long
+    For i = LBound(punctPairs) To UBound(punctPairs) Step 2
+        With myRange.Find
+            .ClearFormatting
+            .replacement.ClearFormatting
+            .text = "([一-龠])(" & punctPairs(i) & ")([一-龠])"
+            .replacement.text = "\1" & punctPairs(i + 1) & "\3"
+            .MatchWildcards = True
+            .Execute Replace:=wdReplaceAll
+        End With
+    Next i
+    
+    MsgBox "标点替换完成！", vbInformation
+    Application.ScreenRefresh
+    ur.EndCustomRecord
+    Exit Sub ' 正常退出点，避免进入错误处理程序
+    
+ERROR_HANDLER:
+    ShowErrorMsg Err, "替换英文标点时发生错误: "
+    If Not (ur Is Nothing) Then ur.EndCustomRecord
+End Sub
+
+Public Sub CheckUpdate_RibbonFun(ByVal control As IRibbonControl)
+    Dim http As Object
+    Dim url As String
+    Dim response As String
+    Dim latestVersion As String
+    Dim currentVersion As String
+    Dim json As Object
+    
+    ' 设置当前版本和项目版本库信息
+    currentVersion = Mid$(Version, 2) ' 当前版本号
+    Dim repoOwner As String
+    Dim repoName As String
+    'repoOwner = "sk8boy"      ' GitHub用户名
+    repoOwner = "tiejunwang"      ' Gitee用户名
+    repoName = "cuit_thesis_template"  ' 仓库名称
+    
+    On Error GoTo ERROR_HANDLER
+    
+    ' 创建HTTP对象
+    Set http = CreateObject("MSXML2.XMLHTTP")
+    
+    ' GitHub API URL - 获取最新发布版本
+    'url = "https://api.github.com/repos/" & repoOwner & "/" & repoName & "/releases/latest"
+    url = "https://gitee.com/api/v5/repos/" & repoOwner & "/" & repoName & "/releases/latest"
+    
+    ' 发送GET请求
+    With http
+        .Open "GET", url, False
+        .setRequestHeader "Content-Type", "application/json"
+        .setRequestHeader "User-Agent", "VBA-GitHub-Updater" ' GitHub要求User-Agent
+        .send
+    End With
+    
+    ' 检查响应状态
+    If http.Status <> 200 Then
+        MsgBox "无法连接到GitHub: HTTP " & http.Status, vbExclamation
+        Exit Sub
+    End If
+    
+    ' 获取响应内容
+    response = http.responseText
+    
+    ' 解析JSON响应（简单文本处理方式）
+    latestVersion = ExtractVersionFromJSON(response)
+
+    If latestVersion = "" Then
+        MsgBox "无法解析版本信息", vbExclamation
+        Exit Sub
+    End If
+    
+    ' 比较版本
+    If CompareVersions(latestVersion, currentVersion) > 0 Then
+        ' 有新版本
+        Dim userChoice As VbMsgBoxResult
+        userChoice = MsgBox("发现新版本: " & latestVersion & vbCrLf & _
+                           "当前版本: " & currentVersion & vbCrLf & vbCrLf & _
+                           "是否打开Gitee发布页面？", vbQuestion + vbYesNo, "发现更新")
+        
+        If userChoice = vbYes Then
+            ' 打开浏览器前往发布页面
+            'Shell "explorer.exe " & "https://github.com/" & repoOwner & "/" & repoName & "/releases/latest"
+            Shell "explorer.exe " & "https://gitee.com/" & repoOwner & "/" & repoName & "/releases/latest"
+        End If
+    Else
+        MsgBox "当前已是最新版本: " & currentVersion, vbInformation
+    End If
+    
+    Exit Sub
+    
+ERROR_HANDLER:
+    ShowErrorMsg Err, "检查模板更新时出错: "
+    If Not (ur Is Nothing) Then ur.EndCustomRecord
+End Sub
+
+' 从JSON响应中提取版本号
+Private Function ExtractVersionFromJSON(jsonText As String) As String
+    Dim versionTag As String
+    Dim startPos As Long
+    Dim endPos As Long
+    
+    ' 查找 "tag_name" 字段
+    startPos = InStr(1, jsonText, """tag_name"":""")
+    If startPos > 0 Then
+        startPos = startPos + Len("""tag_name"":""")
+        endPos = InStr(startPos, jsonText, """")
+        If endPos > startPos Then
+            versionTag = Mid(jsonText, startPos, endPos - startPos)
+            ' 移除可能的"v"前缀
+            If Left(versionTag, 1) = "v" Then
+                versionTag = Mid(versionTag, 2)
+            End If
+            ExtractVersionFromJSON = versionTag
+        End If
     End If
 End Function
 
+' 比较版本号 (返回: 1=version1>version2, 0=相等, -1=version1<version2)
+Private Function CompareVersions(version1 As String, version2 As String) As Integer
+    Dim v1Parts() As String
+    Dim v2Parts() As String
+    Dim i As Integer
+    
+    ' 分割版本号
+    v1Parts = Split(version1, ".")
+    v2Parts = Split(version2, ".")
+    
+    ' 比较每个部分
+    For i = 0 To IIf(UBound(v1Parts) > UBound(v2Parts), UBound(v1Parts), UBound(v2Parts))
+        Dim v1Part As Long
+        Dim v2Part As Long
+        
+        ' 获取当前部分，如果不存在则设为0
+        If i <= UBound(v1Parts) Then
+            v1Part = val(v1Parts(i))
+        Else
+            v1Part = 0
+        End If
+        
+        If i <= UBound(v2Parts) Then
+            v2Part = val(v2Parts(i))
+        Else
+            v2Part = 0
+        End If
+        
+        ' 比较
+        If v1Part > v2Part Then
+            CompareVersions = 1
+            Exit Function
+        ElseIf v1Part < v2Part Then
+            CompareVersions = -1
+            Exit Function
+        End If
+    Next i
+    
+    ' 所有部分都相等
+    CompareVersions = 0
+End Function
 
+Private Sub ShowErrorMsg(err As ErrObject, msg As String)
+    If err.Number = ERR_USRMSG Then
+        MsgBox err.Description, vbExclamation, C_TITLE
+    ElseIf err.Number <> ERR_CANCEL Then
+        MsgBox msg & vbCrLf & vbCrLf & err.Description, vbCritical, C_TITLE
+    End If
+End Sub
