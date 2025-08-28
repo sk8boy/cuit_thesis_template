@@ -1,4 +1,3 @@
-Attribute VB_Name = "CUITMacro"
 Global Const ERR_CANCEL = vbObjectError + 1
 Global Const ERR_USRMSG = vbObjectError + 2
 Global Const C_TITLE = "毕业论文"
@@ -14,7 +13,7 @@ Public otherTeacherTitle As String
 Public mathTypeFound As Boolean
 Public axMathFound As Boolean
 
-Const Version = "v1.2.0"
+Const Version = "v1.2.1"
 
 Const TEXT_GithubUrl = "https://github.com/sk8boy/cuit_thesis_template"
 Const TEXT_GiteeUrl = "https://gitee.com/tiejunwang/cuit_thesis_template"
@@ -80,7 +79,7 @@ Public Sub UpdatePages_RibbonFun(ByVal control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "更新论文正文页数时出错: "
+    ShowErrorMsg err, "更新论文正文页数时出错: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -218,7 +217,7 @@ Public Sub InsertPicNo_RibbonFun(ByVal control As IRibbonControl)
         Set bField = aRange.Fields.Add(currentRange, wdFieldEmpty, "STYLEREF ""标题 1"" \s", False)
     End With
     Selection.TypeText " "
-    If Not ApplyParaStyle("论文图题", 0, False) Then Err.Raise ERR_CANCEL
+    If Not ApplyParaStyle("论文图题", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
     ActiveDocument.Fields.ToggleShowCodes
     Application.ScreenRefresh
@@ -226,7 +225,7 @@ Public Sub InsertPicNo_RibbonFun(ByVal control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "插入图编号时发生错误: "
+    ShowErrorMsg err, "插入图编号时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -248,7 +247,7 @@ Public Sub InsertTblNo_RibbonFun(ByVal control As IRibbonControl)
         Set bField = aRange.Fields.Add(currentRange, wdFieldEmpty, "STYLEREF ""标题 1"" \s", False)
     End With
     Selection.TypeText " "
-    If Not ApplyParaStyle("论文表题", 0, False) Then Err.Raise ERR_CANCEL
+    If Not ApplyParaStyle("论文表题", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
     ActiveDocument.Fields.ToggleShowCodes
     Application.ScreenRefresh
@@ -256,7 +255,7 @@ Public Sub InsertTblNo_RibbonFun(ByVal control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "插入表编号时发生错误: "
+    ShowErrorMsg err, "插入表编号时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -281,7 +280,7 @@ Public Sub InsertDefNo_RibbonFun(ByVal control As IRibbonControl)
     End With
     Selection.TypeText "："
     currentPos = Selection.Range.Start
-    If Not ApplyParaStyle("论文定义", 0, False) Then Err.Raise ERR_CANCEL
+    If Not ApplyParaStyle("论文定义", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
     ActiveDocument.Fields.ToggleShowCodes
     paraStart = Selection.Paragraphs(1).Range.Start
@@ -295,7 +294,7 @@ Public Sub InsertDefNo_RibbonFun(ByVal control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "插入自定义编号时发生错误: "
+    ShowErrorMsg err, "插入自定义编号时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -322,7 +321,7 @@ Public Sub InsertTheoremNo_RibbonFun(ByVal control As IRibbonControl)
     End With
     Selection.TypeText "："
     currentPos = Selection.Range.Start
-    If Not ApplyParaStyle("论文定义", 0, False) Then Err.Raise ERR_CANCEL
+    If Not ApplyParaStyle("论文定义", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
     ActiveDocument.Fields.ToggleShowCodes
     paraStart = Selection.Paragraphs(1).Range.Start
@@ -336,7 +335,7 @@ Public Sub InsertTheoremNo_RibbonFun(ByVal control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "插入定理编号时发生错误: "
+    ShowErrorMsg err, "插入定理编号时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -363,7 +362,7 @@ Public Sub InsertCorollaryNo_RibbonFun(ByVal control As IRibbonControl)
     End With
     Selection.TypeText "："
     currentPos = Selection.Range.Start
-    If Not ApplyParaStyle("论文定义", 0, False) Then Err.Raise ERR_CANCEL
+    If Not ApplyParaStyle("论文定义", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
     ActiveDocument.Fields.ToggleShowCodes
     paraStart = Selection.Paragraphs(1).Range.Start
@@ -377,7 +376,7 @@ Public Sub InsertCorollaryNo_RibbonFun(ByVal control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "插入推论编号时发生错误: "
+    ShowErrorMsg err, "插入推论编号时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -404,7 +403,7 @@ Public Sub InsertLemmaNo_RibbonFun(ByVal control As IRibbonControl)
     End With
     Selection.TypeText "："
     currentPos = Selection.Range.Start
-    If Not ApplyParaStyle("论文定义", 0, False) Then Err.Raise ERR_CANCEL
+    If Not ApplyParaStyle("论文定义", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
     ActiveDocument.Fields.ToggleShowCodes
     paraStart = Selection.Paragraphs(1).Range.Start
@@ -418,7 +417,7 @@ Public Sub InsertLemmaNo_RibbonFun(ByVal control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "插入引理编号时发生错误: "
+    ShowErrorMsg err, "插入引理编号时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -445,7 +444,7 @@ Public Sub InsertProblemNo_RibbonFun(ByVal control As IRibbonControl)
     End With
     Selection.TypeText "："
     currentPos = Selection.Range.Start
-    If Not ApplyParaStyle("论文定义", 0, False) Then Err.Raise ERR_CANCEL
+    If Not ApplyParaStyle("论文定义", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
     ActiveDocument.Fields.ToggleShowCodes
     paraStart = Selection.Paragraphs(1).Range.Start
@@ -459,7 +458,7 @@ Public Sub InsertProblemNo_RibbonFun(ByVal control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "插入问题编号时发生错误: "
+    ShowErrorMsg err, "插入问题编号时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -486,7 +485,7 @@ Public Sub InsertConclusionNo_RibbonFun(ByVal control As IRibbonControl)
     End With
     Selection.TypeText "："
     currentPos = Selection.Range.Start
-    If Not ApplyParaStyle("论文定义", 0, False) Then Err.Raise ERR_CANCEL
+    If Not ApplyParaStyle("论文定义", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
     ActiveDocument.Fields.ToggleShowCodes
     paraStart = Selection.Paragraphs(1).Range.Start
@@ -500,7 +499,7 @@ Public Sub InsertConclusionNo_RibbonFun(ByVal control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    MShowErrorMsg Err, "插入结论编号时发生错误: "
+    MShowErrorMsg err, "插入结论编号时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -581,7 +580,7 @@ Public Sub InsertAlgorithmTbl_RibbonFun(ByVal control As IRibbonControl)
     ur.EndCustomRecord
     Exit Sub
 ERROR_HANDLER:
-    ShowErrorMsg Err, "插入算法时发生错误: "
+    ShowErrorMsg err, "插入算法时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -611,7 +610,7 @@ Private Sub InsertAlgorithmNo()
         Set bField = aRange.Fields.Add(currentRange, wdFieldEmpty, "STYLEREF ""标题 1"" \s", False)
     End With
     Selection.TypeText " "
-    If Not ApplyParaStyle("论文算法标题", 0, False) Then Err.Raise ERR_CANCEL
+    If Not ApplyParaStyle("论文算法标题", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
     ActiveDocument.Fields.ToggleShowCodes
     Application.ScreenRefresh
@@ -619,7 +618,7 @@ Private Sub InsertAlgorithmNo()
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "插入算法编号时发生错误: "
+    ShowErrorMsg err, "插入算法编号时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -634,13 +633,13 @@ Public Sub H1_RibbonFun(control As IRibbonControl)
     On Error GoTo ERROR_HANDLER
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "应用标题1样式"
-    If Not ApplyParaStyle("标题 1", 0, False) Then Err.Raise ERR_CANCEL
+    If Not ApplyParaStyle("标题 1", 0, False) Then err.Raise ERR_CANCEL
     Application.ScreenRefresh
     ur.EndCustomRecord
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "应用标题1样式时发生错误: "
+    ShowErrorMsg err, "应用标题1样式时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -651,13 +650,13 @@ Public Sub H2_RibbonFun(control As IRibbonControl)
     On Error GoTo ERROR_HANDLER
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "应用标题2样式"
-    If Not ApplyParaStyle("标题 2", 0, False) Then Err.Raise ERR_CANCEL
+    If Not ApplyParaStyle("标题 2", 0, False) Then err.Raise ERR_CANCEL
     Application.ScreenRefresh
     ur.EndCustomRecord
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "应用标题2样式时发生错误: "
+    ShowErrorMsg err, "应用标题2样式时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -669,13 +668,13 @@ Public Sub H3_RibbonFun(control As IRibbonControl)
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "应用标题3样式"
     'Apply the built-in Heading 3 style (paragraph style)
-    If Not ApplyParaStyle("标题 3", 0, False) Then Err.Raise ERR_CANCEL
+    If Not ApplyParaStyle("标题 3", 0, False) Then err.Raise ERR_CANCEL
     Application.ScreenRefresh
     ur.EndCustomRecord
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "应用标题3样式时发生错误: "
+    ShowErrorMsg err, "应用标题3样式时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -687,13 +686,13 @@ Public Sub H4_RibbonFun(control As IRibbonControl)
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "应用标题4样式"
     'Apply the built-in Heading 4 style (paragraph style)
-    If Not ApplyParaStyle("标题 4", 0, False) Then Err.Raise ERR_CANCEL
+    If Not ApplyParaStyle("标题 4", 0, False) Then err.Raise ERR_CANCEL
     Application.ScreenRefresh
     ur.EndCustomRecord
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "应用标题4样式时发生错误: "
+    ShowErrorMsg err, "应用标题4样式时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -705,13 +704,13 @@ Public Sub H5_RibbonFun(control As IRibbonControl)
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "应用标题5样式"
     'Apply the built-in Heading 5 style (paragraph style)
-    If Not ApplyParaStyle("标题 5", 0, False) Then Err.Raise ERR_CANCEL
+    If Not ApplyParaStyle("标题 5", 0, False) Then err.Raise ERR_CANCEL
     Application.ScreenRefresh
     ur.EndCustomRecord
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "应用标题5样式时发生错误: "
+    ShowErrorMsg err, "应用标题5样式时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -724,13 +723,13 @@ Public Sub H6_RibbonFun(control As IRibbonControl)
     ur.StartCustomRecord "应用标题6样式"
     Set SaveRange = Selection.Range
     'Apply the built-in Heading 6 style (paragraph style)
-    If Not ApplyParaStyle("标题 6", 0, False) Then Err.Raise ERR_CANCEL
+    If Not ApplyParaStyle("标题 6", 0, False) Then err.Raise ERR_CANCEL
     Application.ScreenRefresh
     ur.EndCustomRecord
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "应用标题6样式时发生错误: "
+    ShowErrorMsg err, "应用标题6样式时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -742,13 +741,13 @@ Public Sub MakeBulletItem_RibbonFun(control As IRibbonControl)
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "应用无序列表样式"
     'Apply the "bulletitem" style
-    If Not ApplyParaStyle("论文无序列表", 0, True) Then Err.Raise ERR_CANCEL
+    If Not ApplyParaStyle("论文无序列表", 0, True) Then err.Raise ERR_CANCEL
     Application.ScreenRefresh
     ur.EndCustomRecord
     Exit Sub
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "应用无序列表样式时出错: "
+    ShowErrorMsg err, "应用无序列表样式时出错: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -760,13 +759,13 @@ Public Sub MakeNumNoIndentItem_RibbonFun(control As IRibbonControl)
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "应用无缩序号样式"
     'Apply the "dashitem" style
-    If Not ApplyParaStyle("论文无缩序号", 0, True) Then Err.Raise ERR_CANCEL
+    If Not ApplyParaStyle("论文无缩序号", 0, True) Then err.Raise ERR_CANCEL
     Application.ScreenRefresh
     ur.EndCustomRecord
     Exit Sub
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "应用无缩序号样式时出错: "
+    ShowErrorMsg err, "应用无缩序号样式时出错: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -779,13 +778,13 @@ Public Sub MakeNumItem_RibbonFun(control As IRibbonControl)
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "应用有序列表样式"
     'Apply the "numitem" style
-    If Not ApplyParaStyle("论文有序列表", 0, True) Then Err.Raise ERR_CANCEL
+    If Not ApplyParaStyle("论文有序列表", 0, True) Then err.Raise ERR_CANCEL
     Application.ScreenRefresh
     ur.EndCustomRecord
     Exit Sub
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "应用有序列表样式时出错: "
+    ShowErrorMsg err, "应用有序列表样式时出错: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -798,25 +797,25 @@ Public Sub ListLevelUp_RibbonFun(control As IRibbonControl)
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "提升列表级别"
     If Selection.Style Is Nothing Then
-        Err.Raise ERR_USRMSG, , "只能选择相同样式的段落!"
+        err.Raise ERR_USRMSG, , "只能选择相同样式的段落!"
     End If
     Select Case Selection.ParagraphFormat.Style
         Case "论文有序列表", "论文无序列表", "论文无缩序号"
             If Selection.Range.ListFormat.ListLevelNumber > 9 Then
-                Err.Raise ERR_USRMSG, , "只能选择相同样式的段落!"
+                err.Raise ERR_USRMSG, , "只能选择相同样式的段落!"
             ElseIf Selection.Range.ListFormat.ListLevelNumber > 6 Then
-                Err.Raise ERR_USRMSG, , "已经达到了列表的最大级别!"
+                err.Raise ERR_USRMSG, , "已经达到了列表的最大级别!"
             End If
             Selection.Range.ListFormat.ListLevelNumber = Selection.Range.ListFormat.ListLevelNumber + 1
         Case Else
-            Err.Raise ERR_USRMSG, , "该功能仅对无序列表、有序列表、无所列表有效!"
+            err.Raise ERR_USRMSG, , "该功能仅对无序列表、有序列表、无所列表有效!"
     End Select
     Application.ScreenRefresh
     ur.EndCustomRecord
     Exit Sub
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "尝试提升列表级别时出错: "
+    ShowErrorMsg err, "尝试提升列表级别时出错: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -829,28 +828,28 @@ Public Sub ListLevelDown_RibbonFun(control As IRibbonControl)
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "降低列表级别"
     If Selection.Style Is Nothing Then
-        Err.Raise ERR_USRMSG, , "只能选择相同样式的段落!"
+        err.Raise ERR_USRMSG, , "只能选择相同样式的段落!"
     End If
     Select Case Selection.ParagraphFormat.Style
         Case "论文无序列表", "论文无缩序号"
             If Selection.Range.ListFormat.ListLevelNumber < 2 Then
-                Err.Raise ERR_CANCEL
+                err.Raise ERR_CANCEL
             End If
             Selection.Range.ListFormat.ListLevelNumber = Selection.Range.ListFormat.ListLevelNumber - 1
         Case "论文有序列表"
             If Selection.Range.ListFormat.ListLevelNumber < 2 Then
-                Err.Raise ERR_CANCEL
+                err.Raise ERR_CANCEL
             End If
             Selection.Range.ListFormat.ListLevelNumber = Selection.Range.ListFormat.ListLevelNumber - 1
         Case Else
-            Err.Raise ERR_USRMSG, , "该功能仅对无序列表、有序列表、无所列表有效!"
+            err.Raise ERR_USRMSG, , "该功能仅对无序列表、有序列表、无所列表有效!"
     End Select
     Application.ScreenRefresh
     ur.EndCustomRecord
     Exit Sub
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "尝试降低列表级别时出错: "
+    ShowErrorMsg err, "尝试降低列表级别时出错: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -864,12 +863,12 @@ Public Sub RestartNumbering_RibbonFun(control As IRibbonControl)
     ur.StartCustomRecord "切换序号"
     
     Selection.Collapse wdCollapseStart
-    If Selection.Paragraphs.Count < 1 Then Err.Raise ERR_CANCEL
+    If Selection.Paragraphs.Count < 1 Then err.Raise ERR_CANCEL
     Set objLF = Selection.Paragraphs(1).Range.ListFormat
     If objLF Is Nothing Then
-        Err.Raise ERR_USRMSG, , "该功能仅对自动编号列表有效!"
+        err.Raise ERR_USRMSG, , "该功能仅对自动编号列表有效!"
     ElseIf objLF.ListTemplate Is Nothing Then
-        Err.Raise ERR_USRMSG, , "该功能仅对自动编号列表有效!"
+        err.Raise ERR_USRMSG, , "该功能仅对自动编号列表有效!"
     End If
     If objLF.ListValue > 1 Then
         objLF.ApplyListTemplate objLF.ListTemplate, False, wdListApplyToWholeList
@@ -880,7 +879,7 @@ Public Sub RestartNumbering_RibbonFun(control As IRibbonControl)
     Exit Sub
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "切换序号时出错: "
+    ShowErrorMsg err, "切换序号时出错: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -932,7 +931,7 @@ Public Sub RestorePageSetup()
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "检查论文页面设置时发生错误: "
+    ShowErrorMsg err, "检查论文页面设置时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -1661,7 +1660,7 @@ Private Sub CheckEnsureStyles()
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "检查并恢复缺失的样式时出错: "
+    ShowErrorMsg err, "检查并恢复缺失的样式时出错: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -1700,7 +1699,7 @@ Private Function AddMissingStyle(ByVal StyleName As String, ByRef StyleType As W
     If Not StyleExists(StyleName) Then
         If StyleType = wdStyleTypeList Then
             'Auto-creation of list styles is Not supported in this version
-            Err.Raise ERR_USRMSG, , "列表样式 '" & StyleName & "' 已被删除，无法自动恢复！"
+            err.Raise ERR_USRMSG, , "列表样式 '" & StyleName & "' 已被删除，无法自动恢复！"
         End If
     Else
         Set NewStyle = ActiveDocument.Styles(StyleName)
@@ -1710,7 +1709,7 @@ Private Function AddMissingStyle(ByVal StyleName As String, ByRef StyleType As W
             Exit Function
         ElseIf StyleType = wdStyleTypeList Then
             'Auto-creation of list styles is Not supported in this version
-            Err.Raise ERR_USRMSG, , "列表样式 '" & StyleName & "' 已经被修改, 无法自动恢复！"
+            err.Raise ERR_USRMSG, , "列表样式 '" & StyleName & "' 已经被修改, 无法自动恢复！"
         Else
             'Style exists, but the style type is incorrect --> rename the existing style
             Do
@@ -1749,7 +1748,7 @@ Private Function ApplyParaStyle(ByVal StyleName As String, ByVal BuiltInStyleID 
     End If
     On Error GoTo ERROR_HANDLER
     If objStyle Is Nothing Then
-        Err.Raise ERR_USRMSG, , "该模版中找不到预定义的段落类型 '" & StyleName & "'." & vbCrLf & _
+        err.Raise ERR_USRMSG, , "该模版中找不到预定义的段落类型 '" & StyleName & "'." & vbCrLf & _
         "请使用'模板检查恢复'按钮对其进行恢复！"
     End If
     'If objStyle <> "论文正文" Then Exit Function
@@ -1761,7 +1760,7 @@ Private Function ApplyParaStyle(ByVal StyleName As String, ByVal BuiltInStyleID 
                 'multiple paragraphs are selected
                 If Not booMultiPara Then
                     'If Not supported, cancel
-                    Err.Raise ERR_USRMSG, , "该功能只能应用于一个段落!"
+                    err.Raise ERR_USRMSG, , "该功能只能应用于一个段落!"
                 End If
             End If
         End If
@@ -1777,7 +1776,7 @@ Private Function ApplyParaStyle(ByVal StyleName As String, ByVal BuiltInStyleID 
     Exit Function
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "应用段落样式时发生错误: "
+    ShowErrorMsg err, "应用段落样式时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Function
 
@@ -1794,7 +1793,7 @@ Private Function ApplyCharStyle(ByVal StyleName As String, ByVal BuiltInStyleID 
     End If
     On Error GoTo ERROR_HANDLER
     If objStyle Is Nothing Then
-        Err.Raise ERR_USRMSG, , "该模版中找不到预定义的字符类型 '" & StyleName & "'." & vbCrLf & _
+        err.Raise ERR_USRMSG, , "该模版中找不到预定义的字符类型 '" & StyleName & "'." & vbCrLf & _
         "请使用'模板检查恢复'按钮对其进行恢复！"
     End If
     If objStyle <> "论文正文" Then Exit Function
@@ -1810,7 +1809,7 @@ Private Function ApplyCharStyle(ByVal StyleName As String, ByVal BuiltInStyleID 
     Exit Function
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "应用字符样式时发生错误: "
+    ShowErrorMsg err, "应用字符样式时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Function
 
@@ -1939,7 +1938,7 @@ Public Sub MakeStandard_RibbonFun(control As IRibbonControl)
         'NormalSpacing control
         'Separate the first paragraph
         Set objFirstPara = Selection.Paragraphs(1)
-        If objFirstPara Is Nothing Then Err.Raise ERR_CANCEL
+        If objFirstPara Is Nothing Then err.Raise ERR_CANCEL
         'If more than one paragraph is selected, first format the rest of the selection
         If Selection.End > objFirstPara.Range.End Then
             Selection.MoveStart wdParagraph, 1
@@ -1959,7 +1958,7 @@ Public Sub MakeStandard_RibbonFun(control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "应用正文样式时发生错误: "
+    ShowErrorMsg err, "应用正文样式时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -2116,7 +2115,7 @@ Function InsertCrossReference_(Optional isActiveState As Variant)
     
     Dim storeTracking As Variant ' temporarily remember the status of "TrackRevisions"
     Dim prompt As String ' text For msgbox
-    Dim Response        As Variant              ' user's response To msgbox
+    Dim response        As Variant              ' user's response To msgbox
     Dim lastpos As Variant
     Dim retry           As Boolean
     Dim found As Boolean
@@ -2559,8 +2558,8 @@ cannot:
         If paramRefType = "" Then
             ' Sorry, we cannot...
             prompt = "无法在此处插入交叉引用。" & vbNewLine & "请尝试在其他位置插入交叉引用，或者取消。"
-            Response = MsgBox(prompt, 1)
-            If Response = vbCancel Then
+            response = MsgBox(prompt, 1)
+            If response = vbCancel Then
                 Selection.GoTo What:=wdGoToBookmark, Name:="tempforInsert"
                 If ActiveDocument.Bookmarks.Exists("tempforInsert") Then
                     ActiveDocument.Bookmarks.item("tempforInsert").Delete
@@ -2585,7 +2584,7 @@ retryfinding:
                 lastpos = Selection.End
                 Selection.GoTo What:=wdGoToField, Name:="SEQ"
                 'On Error Resume Next
-                Debug.Print "Err.Number = " & Err.Number
+                Debug.Print "Err.Number = " & err.Number
                 allowed = False
                 If paramRefType = wdRefTypeNumberedItem Then
                     allowed = True
@@ -2665,7 +2664,7 @@ CleanExit:
     Exit Function
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "插入交叉引用时发生错误: "
+    ShowErrorMsg err, "插入交叉引用时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Function
 
@@ -3475,7 +3474,7 @@ Private Function IsInArray(ByVal stringToBeFound As String, arr As Variant, Opti
     ' First check, If the array is possibly empty:
     On Error Resume Next
     dummy = UBound(arr) ' this throws an error on empty arrays, source: https://stackoverflow.com/questions/26290781/check-If-array-is-empty-vba-excel/26290860
-    If Err.Number <> 0 Then
+    If err.Number <> 0 Then
         ' The Array is empty!
         IsInArray = False
         Exit Function
@@ -3816,10 +3815,10 @@ Public Sub GetLatestVersion_Github_RibbonFun(ByVal control As IRibbonControl)
     Exit Sub
     
 errHandle:
-    If Err.Number = ERR_USRMSG Then
-        MsgBox Err.Description, vbExclamation, C_TITLE
-    ElseIf Err.Number <> ERR_CANCEL Then
-        MsgBox "发生错误 (MakeStandard): " & Err.Description, vbCritical, C_TITLE
+    If err.Number = ERR_USRMSG Then
+        MsgBox err.Description, vbExclamation, C_TITLE
+    ElseIf err.Number <> ERR_CANCEL Then
+        MsgBox "发生错误 (MakeStandard): " & err.Description, vbCritical, C_TITLE
     End If
 End Sub
 
@@ -3831,10 +3830,10 @@ Public Sub GetLatestVersion_Gitee_RibbonFun(ByVal control As IRibbonControl)
     Exit Sub
     
 errHandle:
-    If Err.Number = ERR_USRMSG Then
-        MsgBox Err.Description, vbExclamation, C_TITLE
-    ElseIf Err.Number <> ERR_CANCEL Then
-        MsgBox "发生错误 (MakeStandard): " & Err.Description, vbCritical, C_TITLE
+    If err.Number = ERR_USRMSG Then
+        MsgBox err.Description, vbExclamation, C_TITLE
+    ElseIf err.Number <> ERR_CANCEL Then
+        MsgBox "发生错误 (MakeStandard): " & err.Description, vbCritical, C_TITLE
     End If
 End Sub
 
@@ -3855,10 +3854,10 @@ Public Sub RemoveSpaces_RibbonFun(ByVal control As IRibbonControl)
     Else
         ' 如果没有选中文本，在整个文档操作
         Set myRange = ActiveDocument.Content
-        Response = MsgBox("没有选中文本，将在整个文档中清理空格。" & vbCrLf & _
+        response = MsgBox("没有选中文本，将在整个文档中清理空格。" & vbCrLf & _
                          "是否继续？", vbQuestion + vbYesNoCancel, "确认继续操作")
         ' 检查用户选择
-        If Response = vbCancel Or Response = vbNo Then
+        If response = vbCancel Or response = vbNo Then
             ur.EndCustomRecord
             Exit Sub
         End If
@@ -3867,9 +3866,9 @@ Public Sub RemoveSpaces_RibbonFun(ByVal control As IRibbonControl)
     ' 删除中文文本中英文单词间的空格（中英文混排时）
     With myRange.Find
         .ClearFormatting
-        .Replacement.ClearFormatting
-        .Text = "([!一-龠 ，。！？；：（）【】《》、“”‘’])([ ]@)([一-龠，。！？；：“”‘’（）【】《》、])"  ' 非中文字母字符+空格+中文字符
-        .Replacement.Text = "\1\3"  ' 删除空格
+        .replacement.ClearFormatting
+        .text = "([!一-龠 ，。！？；：（）【】《》、“”‘’])([ ]@)([一-龠，。！？；：“”‘’（）【】《》、])"  ' 非中文字母字符+空格+中文字符
+        .replacement.text = "\1\3"  ' 删除空格
         .Forward = True
         .Wrap = wdFindContinue
         .Format = False
@@ -3883,9 +3882,9 @@ Public Sub RemoveSpaces_RibbonFun(ByVal control As IRibbonControl)
     
     With myRange.Find
         .ClearFormatting
-        .Replacement.ClearFormatting
-        .Text = "([一-龠，。！？；：（）【】《》、“”‘’])([ ]@)([!一-龠 ，。！？；：“”‘’（）【】《》、])"  ' 中文字符+空格+非中文字母字符
-        .Replacement.Text = "\1\3"  ' 删除空格
+        .replacement.ClearFormatting
+        .text = "([一-龠，。！？；：（）【】《》、“”‘’])([ ]@)([!一-龠 ，。！？；：“”‘’（）【】《》、])"  ' 中文字符+空格+非中文字母字符
+        .replacement.text = "\1\3"  ' 删除空格
         .Forward = True
         .Wrap = wdFindContinue
         .Format = False
@@ -3900,9 +3899,9 @@ Public Sub RemoveSpaces_RibbonFun(ByVal control As IRibbonControl)
     ' 删除中文标点符号前的空格
     With myRange.Find
         .ClearFormatting
-        .Replacement.ClearFormatting
-        .Text = "([ ]@)([，。！？；：（）【】《》、“”‘’])"  ' 空格+中文标点
-        .Replacement.Text = "\2"  ' 删除空格
+        .replacement.ClearFormatting
+        .text = "([ ]@)([，。！？；：（）【】《》、“”‘’])"  ' 空格+中文标点
+        .replacement.text = "\2"  ' 删除空格
         .Forward = True
         .Wrap = wdFindContinue
         .Format = False
@@ -3917,9 +3916,9 @@ Public Sub RemoveSpaces_RibbonFun(ByVal control As IRibbonControl)
     ' 删除中文标点符号后的空格（除了某些英文标点后可能需要空格的情况）
     With myRange.Find
         .ClearFormatting
-        .Replacement.ClearFormatting
-        .Text = "([，。！？；：（）【】《》、“”‘’])([ ]@)"  ' 中文标点+空格
-        .Replacement.Text = "\1"  ' 删除空格
+        .replacement.ClearFormatting
+        .text = "([，。！？；：（）【】《》、“”‘’])([ ]@)"  ' 中文标点+空格
+        .replacement.text = "\1"  ' 删除空格
         .Forward = True
         .Wrap = wdFindContinue
         .Format = False
@@ -3934,9 +3933,9 @@ Public Sub RemoveSpaces_RibbonFun(ByVal control As IRibbonControl)
     ' 删除行首空格
     With myRange.Find
         .ClearFormatting
-        .Replacement.ClearFormatting
-        .Text = "^13[ ]@"  ' 段落标记后的空格
-        .Replacement.Text = "^13"  ' 只保留段落标记
+        .replacement.ClearFormatting
+        .text = "^13[ ]@"  ' 段落标记后的空格
+        .replacement.text = "^13"  ' 只保留段落标记
         .Forward = True
         .Wrap = wdFindContinue
         .Format = False
@@ -3951,9 +3950,9 @@ Public Sub RemoveSpaces_RibbonFun(ByVal control As IRibbonControl)
     ' 删除行尾空格
     With myRange.Find
         .ClearFormatting
-        .Replacement.ClearFormatting
-        .Text = "[ ]@^13"  ' 空格+段落标记
-        .Replacement.Text = "^13"  ' 只保留段落标记
+        .replacement.ClearFormatting
+        .text = "[ ]@^13"  ' 空格+段落标记
+        .replacement.text = "^13"  ' 只保留段落标记
         .Forward = True
         .Wrap = wdFindContinue
         .Format = False
@@ -3968,9 +3967,9 @@ Public Sub RemoveSpaces_RibbonFun(ByVal control As IRibbonControl)
         ' 删除行首空格
     With myRange.Find
         .ClearFormatting
-        .Replacement.ClearFormatting
-        .Text = "^l[ ]@"  ' 段落标记后的空格
-        .Replacement.Text = "^l"  ' 只保留段落标记
+        .replacement.ClearFormatting
+        .text = "^l[ ]@"  ' 段落标记后的空格
+        .replacement.text = "^l"  ' 只保留段落标记
         .Forward = True
         .Wrap = wdFindContinue
         .Format = False
@@ -3985,9 +3984,9 @@ Public Sub RemoveSpaces_RibbonFun(ByVal control As IRibbonControl)
     ' 删除行尾空格
     With myRange.Find
         .ClearFormatting
-        .Replacement.ClearFormatting
-        .Text = "[ ]@^l"  ' 空格+段落标记
-        .Replacement.Text = "^l"  ' 只保留段落标记
+        .replacement.ClearFormatting
+        .text = "[ ]@^l"  ' 空格+段落标记
+        .replacement.text = "^l"  ' 只保留段落标记
         .Forward = True
         .Wrap = wdFindContinue
         .Format = False
@@ -4005,7 +4004,7 @@ Public Sub RemoveSpaces_RibbonFun(ByVal control As IRibbonControl)
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "删除多余空格时发生错误: "
+    ShowErrorMsg err, "删除多余空格时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -4024,10 +4023,10 @@ Public Sub ReplacePunctuationInChinese_RibbonFun(ByVal control As IRibbonControl
         Set myRange = Selection.Range
     Else
         Set myRange = ActiveDocument.Content
-        Response = MsgBox("没有选中文本，将在整个文档中替换英文标点。" & vbCrLf & _
+        response = MsgBox("没有选中文本，将在整个文档中替换英文标点。" & vbCrLf & _
                          "是否继续？", vbQuestion + vbYesNoCancel, "确认继续操作")
         ' 检查用户选择
-        If Response = vbCancel Or Response = vbNo Then
+        If response = vbCancel Or response = vbNo Then
             ur.EndCustomRecord
             Exit Sub
         End If
@@ -4063,7 +4062,7 @@ Public Sub ReplacePunctuationInChinese_RibbonFun(ByVal control As IRibbonControl
     Exit Sub ' 正常退出点，避免进入错误处理程序
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "替换英文标点时发生错误: "
+    ShowErrorMsg err, "替换英文标点时发生错误: "
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
 
@@ -4137,8 +4136,7 @@ Public Sub CheckUpdate_RibbonFun(ByVal control As IRibbonControl)
     Exit Sub
     
 ERROR_HANDLER:
-    ShowErrorMsg Err, "检查模板更新时出错: "
-    If Not (ur Is Nothing) Then ur.EndCustomRecord
+    ShowErrorMsg err, "检查模板更新时出错: "
 End Sub
 
 ' 从JSON响应中提取版本号
@@ -4212,3 +4210,113 @@ Private Sub ShowErrorMsg(err As ErrObject, msg As String)
         MsgBox msg & vbCrLf & vbCrLf & err.Description, vbCritical, C_TITLE
     End If
 End Sub
+
+Public Sub ChangeTemplate_RibbonFun(ByVal control As IRibbonControl)
+    Dim fd As FileDialog
+    Dim chosenFile As String
+    Dim filePath As String
+    Dim newVersion As String
+    Dim changeFile As Boolean
+    Dim ur As UndoRecord
+    
+    On Error GoTo ERROR_HANDLER
+    Set ur = Application.UndoRecord
+    ur.StartCustomRecord "替换论文模板"
+    changeFile = True
+    
+    ' 1. 创建并初始化一个“打开文件”对话框
+    Set fd = Application.FileDialog(msoFileDialogOpen)
+    With fd
+        ' 2. 设置对话框属性
+        .title = "请选择新的模板文件" ' 设置对话框标题
+        .InitialFileName = Environ("USERPROFILE") & "\Documents\" ' 设置初始路径
+        .AllowMultiSelect = False ' 设置为False，只允许选择单个文件
+        
+        ' 3. 清除现有过滤器并添加新的
+        .Filters.Clear
+        .Filters.Add "Template Files", "*.dot; *.dotm"
+        .Filters.Add "All Files", "*.*"
+        
+        ' 4. 显示对话框 (-1 为成功点击打开，0 为取消)
+        If .Show = -1 Then
+            ' 5. 获取用户选择的第一个（也是唯一一个）文件的完整路径
+            filePath = .SelectedItems(1)
+            
+            newVersion = ExtractVersionFromFilePath(filePath)
+            
+            If newVersion = "" Or CompareVersions(newVersion, Version) <= 0 Then
+                Dim userChoice As VbMsgBoxResult
+                userChoice = MsgBox("警告：文件 " & filePath & " 中不包含任何版本信息或不是更高版本的模板。" & vbCrLf & _
+                           "确认继续替换成该模板文件？", vbQuestion, "确认替换模板文件")
+                
+                If Not userChoice = vbYes Then
+                    changeFile = False
+                End If
+            End If
+            
+            If changeFile Then
+                With ActiveDocument
+                    .UpdateStylesOnOpen = False
+                    .AttachedTemplate = filePath
+                End With
+    
+                MsgBox "已更新本文档使用的模板: " & vbNewLine & filePath, vbInformation
+            End If
+        End If
+    End With
+    
+    ' 6. 释放对象
+    Set fd = Nothing
+
+    Application.ScreenRefresh
+    ur.EndCustomRecord
+    Exit Sub ' 正常退出点，避免进入错误处理程序
+    
+ERROR_HANDLER:
+    ShowErrorMsg err, "替换论文模板时发生错误: "
+    If Not (ur Is Nothing) Then ur.EndCustomRecord
+End Sub
+
+Private Function ExtractVersionFromFilePath(filePath As String) As String
+    Dim fileName As String
+    Dim vPosition As Long
+    Dim startPos As Long
+    Dim i As Long
+    Dim versionString As String
+    Dim currentChar As String
+    
+    ' 1. 从完整路径中提取文件名（不含路径和扩展名）
+    fileName = Mid(filePath, InStrRev(filePath, "\") + 1) ' 获取带扩展名的文件名
+    fileName = Left(fileName, InStrRev(fileName, ".") - 1) ' 去除扩展名
+    
+    ' 2. 查找 "v" 或 "V" 的位置（不区分大小写）
+    vPosition = InStr(1, fileName, "v", vbTextCompare)
+    If vPosition = 0 Then
+        ExtractVersion = "未找到版本信息"
+        Exit Function
+    End If
+    
+    ' 3. 设置版本信息开始位置（v字母之后）
+    startPos = vPosition + 1
+    versionString = ""
+    
+    ' 4. 从v后面开始遍历字符，直到遇到非版本字符（非数字、非点号）
+    For i = startPos To Len(fileName)
+        currentChar = Mid(fileName, i, 1)
+        
+        ' 如果是数字或点号，则认为是版本号的一部分
+        If IsNumeric(currentChar) Or currentChar = "." Then
+            versionString = versionString & currentChar
+        ' 遇到其他非版本字符则停止
+        Else
+            Exit For
+        End If
+    Next i
+    
+    ' 5. 返回结果
+    If versionString = "" Then
+        ExtractVersion = ""
+    Else
+        ExtractVersion = versionString
+    End If
+End Function
