@@ -219,7 +219,7 @@ Public Sub InsertPicNo_RibbonFun(ByVal control As IRibbonControl)
     Selection.TypeText " "
     If Not ApplyParaStyle("论文图题", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
-    ActiveDocument.Fields.ToggleShowCodes
+    ' ActiveDocument.Fields.ToggleShowCodes
     Application.ScreenRefresh
     ur.EndCustomRecord
     Exit Sub ' 正常退出点，避免进入错误处理程序
@@ -249,7 +249,7 @@ Public Sub InsertTblNo_RibbonFun(ByVal control As IRibbonControl)
     Selection.TypeText " "
     If Not ApplyParaStyle("论文表题", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
-    ActiveDocument.Fields.ToggleShowCodes
+    ' ActiveDocument.Fields.ToggleShowCodes
     Application.ScreenRefresh
     ur.EndCustomRecord
     Exit Sub ' 正常退出点，避免进入错误处理程序
@@ -282,7 +282,7 @@ Public Sub InsertDefNo_RibbonFun(ByVal control As IRibbonControl)
     currentPos = Selection.Range.Start
     If Not ApplyParaStyle("论文定义", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
-    ActiveDocument.Fields.ToggleShowCodes
+    ' ActiveDocument.Fields.ToggleShowCodes
     paraStart = Selection.Paragraphs(1).Range.Start
     Set aRange = ActiveDocument.Range(Start:=paraStart, End:=currentPos)
     aRange.Font.Bold = True
@@ -323,7 +323,7 @@ Public Sub InsertTheoremNo_RibbonFun(ByVal control As IRibbonControl)
     currentPos = Selection.Range.Start
     If Not ApplyParaStyle("论文定义", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
-    ActiveDocument.Fields.ToggleShowCodes
+    ' ActiveDocument.Fields.ToggleShowCodes
     paraStart = Selection.Paragraphs(1).Range.Start
     Set aRange = ActiveDocument.Range(Start:=paraStart, End:=currentPos)
     aRange.Font.Bold = True
@@ -364,7 +364,7 @@ Public Sub InsertCorollaryNo_RibbonFun(ByVal control As IRibbonControl)
     currentPos = Selection.Range.Start
     If Not ApplyParaStyle("论文定义", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
-    ActiveDocument.Fields.ToggleShowCodes
+    ' ActiveDocument.Fields.ToggleShowCodes
     paraStart = Selection.Paragraphs(1).Range.Start
     Set aRange = ActiveDocument.Range(Start:=paraStart, End:=currentPos)
     aRange.Font.Bold = True
@@ -405,7 +405,7 @@ Public Sub InsertLemmaNo_RibbonFun(ByVal control As IRibbonControl)
     currentPos = Selection.Range.Start
     If Not ApplyParaStyle("论文定义", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
-    ActiveDocument.Fields.ToggleShowCodes
+    ' ActiveDocument.Fields.ToggleShowCodes
     paraStart = Selection.Paragraphs(1).Range.Start
     Set aRange = ActiveDocument.Range(Start:=paraStart, End:=currentPos)
     aRange.Font.Bold = True
@@ -446,7 +446,7 @@ Public Sub InsertProblemNo_RibbonFun(ByVal control As IRibbonControl)
     currentPos = Selection.Range.Start
     If Not ApplyParaStyle("论文定义", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
-    ActiveDocument.Fields.ToggleShowCodes
+    ' ActiveDocument.Fields.ToggleShowCodes
     paraStart = Selection.Paragraphs(1).Range.Start
     Set aRange = ActiveDocument.Range(Start:=paraStart, End:=currentPos)
     aRange.Font.Bold = True
@@ -487,7 +487,7 @@ Public Sub InsertConclusionNo_RibbonFun(ByVal control As IRibbonControl)
     currentPos = Selection.Range.Start
     If Not ApplyParaStyle("论文定义", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
-    ActiveDocument.Fields.ToggleShowCodes
+    ' ActiveDocument.Fields.ToggleShowCodes
     paraStart = Selection.Paragraphs(1).Range.Start
     Set aRange = ActiveDocument.Range(Start:=paraStart, End:=currentPos)
     aRange.Font.Bold = True
@@ -612,7 +612,7 @@ Private Sub InsertAlgorithmNo()
     Selection.TypeText " "
     If Not ApplyParaStyle("论文算法标题", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
-    ActiveDocument.Fields.ToggleShowCodes
+    ' ActiveDocument.Fields.ToggleShowCodes
     Application.ScreenRefresh
     ur.EndCustomRecord
     Exit Sub ' 正常退出点，避免进入错误处理程序
