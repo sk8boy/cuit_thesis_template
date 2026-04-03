@@ -30,7 +30,7 @@ def build_word_file():
 
     this_file = SRC_DIR / 'ThisDocument.cls'
     if this_file.exists():
-        with open(this_file, encoding='utf-8') as fp:
+        with open(this_file, encoding='gbk') as fp:
             lines = fp.readlines()
 
         for idx, line in enumerate(lines):

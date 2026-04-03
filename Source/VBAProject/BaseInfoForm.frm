@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} BaseInfoForm 
    Caption         =   "论文基础信息"
-   ClientHeight    =   6045
+   ClientHeight    =   9015.001
    ClientLeft      =   105
    ClientTop       =   450
    ClientWidth     =   8010
@@ -25,18 +25,37 @@ Private Sub OkBtn_Click() ' 确定按钮
     titleEN = tbTitleEN.Value
     studentName = tbName.Value
     studentNo = tbStudentNo.Value
-    teacherName = tbTeacherName.Value
-    teacherTitle = tbTeacherTitle.Value
+    college = tbCollege.Value
     major = tbMajor.Value
+    studyField = tbStudyField.Value
+    firstTeacherName = tbFirstTeacherName.Value
+    firstTeacherTitle = tbFirstTeacherTitle.Value
+    otherTeacherName = tbOtherTeacherName.Value
+    otherTeacherTitle = tbOtherTeacherTitle.Value
 
-    UpdateContentControl "封面题目", Trim(titleCN)
+    UpdateContentControl "封面中文题目", Trim(titleCN)
     UpdateContentControl "论文题目", Trim(titleCN)
-    UpdateContentControl "英文题目", Trim(titleEN)
+
+    UpdateContentControl "封面英文题目", Trim(titleEN)
+
     UpdateContentControl "作者", Trim(studentName)
-    UpdateContentControl "编号", Trim(studentNo)
-    UpdateContentControl "导师", Trim(teacherName)
-    UpdateContentControl "职称", Trim(teacherTitle)
+    
+    UpdateContentControl "学号", Trim(studentNo)
+    
+    UpdateContentControl "学院", Trim(college)
+    
     UpdateContentControl "专业", Trim(major)
+    
+    UpdateContentControl "研究方向", Trim(studyField)
+    
+    UpdateContentControl "导师", Trim(firstTeacherName)
+    UpdateContentControl "指导老师", Trim(firstTeacherName)
+
+    UpdateContentControl "职称", Trim(firstTeacherTitle)
+
+    UpdateContentControl "辅助导师", Trim(otherTeacherName)
+
+    UpdateContentControl "辅助导师职称", Trim(otherTeacherTitle)
 
     Unload Me ' 关闭窗体
 
@@ -44,10 +63,10 @@ Private Sub OkBtn_Click() ' 确定按钮
     Exit Sub
 
 ERROR_HANDLER:
-    If Err.Number = ERR_USRMSG Then
-        MsgBox Err.Description, vbExclamation, C_TITLE
-    ElseIf Err.Number <> ERR_CANCEL Then
-        MsgBox "更新基础信息时发生错误: " & Err.Description, vbCritical, C_TITLE
+    If err.Number = ERR_USRMSG Then
+        MsgBox err.Description, vbExclamation, C_TITLE
+    ElseIf err.Number <> ERR_CANCEL Then
+        MsgBox "更新基础信息时发生错误: " & err.Description, vbCritical, C_TITLE
     End If
     If Not (ur Is Nothing) Then ur.EndCustomRecord
 End Sub
@@ -88,13 +107,17 @@ End Sub
 
 
 Private Sub UserForm_Initialize()
-    titleCN = GetContentControl("论文题目")
-    titleEN = GetContentControl("英文题目")
+    titleCN = GetContentControl("封面中文题目")
+    titleEN = GetContentControl("封面英文题目")
     studentName = GetContentControl("作者")
-    studentNo = GetContentControl("编号")
-    teacherName = GetContentControl("导师")
-    teacherTitle = GetContentControl("职称")
+    studentNo = GetContentControl("学号")
+    college = GetContentControl("学院")
     major = GetContentControl("专业")
+    studyField = GetContentControl("研究方向")
+    firstTeacherName = GetContentControl("导师")
+    firstTeacherTitle = GetContentControl("职称")
+    otherTeacherName = GetContentControl("辅助导师")
+    otherTeacherTitle = GetContentControl("辅助导师职称")
     
     If titleCN <> "论文中文题目" Then
         tbTitleCN.Value = titleCN
@@ -104,7 +127,7 @@ Private Sub UserForm_Initialize()
         tbTitleEN.Value = titleEN
     End If
     
-    If studentName <> "作者姓名" Then
+    If studentName <> "姓名" Then
         tbName.Value = studentName
     End If
     
@@ -112,17 +135,32 @@ Private Sub UserForm_Initialize()
         tbStudentNo.Value = studentNo
     End If
     
-    If teacherName <> "导师姓名" Then
-        tbTeacherName.Value = teacherName
-    End If
-    
-    If teacherTitle <> "职称" Then
-        tbTeacherTitle.Value = teacherTitle
+    If college <> "学院" Then
+        tbCollege.Value = college
     End If
     
     If major <> "专业" Then
         tbMajor.Value = major
     End If
     
+    If studyField <> "研究方向" Then
+        tbStudyField.Value = studyField
+    End If
+    
+    If firstTeacherName <> "导师姓名" Then
+        tbFirstTeacherName.Value = firstTeacherName
+    End If
+    
+    If firstTeacherTitle <> "职称" Then
+        tbFirstTeacherTitle.Value = firstTeacherTitle
+    End If
+    
+    If otherTeacherName <> "导师姓名" Then
+        tbOtherTeacherName.Value = otherTeacherName
+    End If
+    
+    If otherTeacherTitle <> "职称" Then
+        tbOtherTeacherTitle.Value = otherTeacherTitle
+    End If
 End Sub
 
