@@ -14,7 +14,7 @@ Public otherTeacherTitle As String
 Public mathTypeFound As Boolean
 Public axMathFound As Boolean
 
-Const Version = "v2.0.0"
+Const Version = "v2.0.3"
 
 Const TEXT_GithubUrl = "https://github.com/sk8boy/cuit_thesis_template"
 Const TEXT_GiteeUrl = "https://gitee.com/tiejunwang/cuit_thesis_template"
@@ -45,7 +45,7 @@ Public Sub UpdatePages_RibbonFun(ByVal control As IRibbonControl)
     If keyword = "" Then Exit Sub
 
     ' 初始化搜索范围
-    Set rng = ActiveDocument.Content
+    Set rng = ActiveDocument.content
     rng.Find.ClearFormatting
     rng.Find.Style = ActiveDocument.Styles("标题 1")
     
@@ -62,7 +62,7 @@ Public Sub UpdatePages_RibbonFun(ByVal control As IRibbonControl)
             startPage = rng.Information(wdActiveEndPageNumber)
             
             ' 获取文档总页数
-            endPage = ActiveDocument.Content.Information(wdNumberOfPagesInDocument)
+            endPage = ActiveDocument.content.Information(wdNumberOfPagesInDocument)
             bodyPageCount = endPage - startPage + 1
             
             ' 存储为文档变量
@@ -135,6 +135,127 @@ Private Sub UpdatePagesInToc()
     'MsgBox "文档变量域更新完成!", vbInformation, C_TITLE
 End Sub
 
+
+' 完整的更新函数 - 处理所有情况
+Public Sub UpdateContentControl(ByVal title As String, ByVal val As String)
+    Dim cc As ContentControl
+    Dim originalLockState As Boolean
+    Dim originalControlLockState As Boolean
+    Dim docProtected As Boolean
+    Dim docProtectionType As WdProtectionType
+    Dim isDropdown As Boolean
+    Dim entry As ContentControlListEntry
+    Dim found As Boolean
+    Dim idx As Integer
+    
+    On Error GoTo ErrorHandler
+    
+    ' 1. 查找控件
+    Set cc = ActiveDocument.SelectContentControlsByTitle(title).item(1)
+    
+    If cc Is Nothing Then
+        MsgBox "控件 '" & title & "' 不存在！", vbExclamation
+        Exit Sub
+    End If
+    
+    ' 2. 检查是否是下拉列表
+    isDropdown = (cc.Type = wdContentControlDropdownList)
+    
+    If isDropdown Then
+        ' 检查值是否在下拉列表中
+        idx = 0
+        For Each entry In cc.DropdownListEntries
+            idx = idx + 1
+            If entry.text = val Then
+                found = True
+                Exit For
+            End If
+        Next entry
+        
+        If Not found Then
+            ' 如果值不在列表中，使用第一个选项
+            If cc.DropdownListEntries.Count > 0 Then
+                val = cc.DropdownListEntries(1).text
+                MsgBox "值不在列表中，已自动选择: '" & val & "'", vbInformation
+            Else
+                MsgBox "下拉列表没有可用选项！", vbExclamation
+                Exit Sub
+            End If
+        End If
+    End If
+    
+    ' 3. 保存并临时解锁控件
+    originalLockState = cc.LockContents
+    originalControlLockState = cc.LockContentControl
+    
+    cc.LockContents = False
+    cc.LockContentControl = False
+    
+    ' 4. 更新值
+    If isDropdown Then
+        cc.DropdownListEntries(idx).Select
+    Else
+        cc.Range.text = val
+    End If
+    
+    ' 5. 恢复控件锁定状态
+    cc.LockContents = originalLockState
+    cc.LockContentControl = originalControlLockState
+    
+    ' MsgBox "控件 '" & title & "' 已更新为: " & val, vbInformation
+    Exit Sub
+    
+ErrorHandler:
+    ' 错误处理：恢复所有状态
+    On Error Resume Next
+    cc.LockContents = originalLockState
+    cc.LockContentControl = originalControlLockState
+    
+    If docProtected Then
+        ActiveDocument.Protect Type:=docProtectionType, NoReset:=False
+    End If
+    On Error GoTo 0
+    
+    MsgBox "更新失败: " & err.Description & vbCrLf & _
+           "错误代码: " & err.Number, vbCritical
+End Sub
+
+Public Sub DiagnoseIssue()
+    Dim cc As ContentControl
+    Dim msg As String
+    
+    On Error Resume Next
+    Set cc = ActiveDocument.SelectContentControlsByTitle("声明表格密级").item(1)
+    On Error GoTo 0
+    
+    If cc Is Nothing Then
+        MsgBox "控件 '" & title & "' 不存在！"
+        Exit Sub
+    End If
+    
+    msg = "=== 诊断报告 ===" & vbCrLf
+    msg = msg & "控件类型: " & cc.Type & vbCrLf
+    msg = msg & "LockContents: " & cc.LockContents & vbCrLf
+    msg = msg & "LockContentControl: " & cc.LockContentControl & vbCrLf
+    msg = msg & "当前值: '" & cc.Range.text & "'" & vbCrLf
+    msg = msg & "文档保护类型: " & ActiveDocument.ProtectionType & vbCrLf
+    msg = msg & "文档是否保护: " & (ActiveDocument.ProtectionType <> wdNoProtection) & vbCrLf
+    
+    ' 如果是下拉列表，显示所有选项
+    If cc.Type = wdContentControlDropdownList Then
+        msg = msg & vbCrLf & "=== 下拉列表选项 ===" & vbCrLf
+        Dim entry As ContentControlListEntry
+        Dim i As Integer
+        i = 1
+        For Each entry In cc.DropdownListEntries
+            msg = msg & i & ". '" & entry.text & "'" & vbCrLf
+            i = i + 1
+        Next entry
+    End If
+    
+    MsgBox msg, vbInformation, "诊断结果"
+End Sub
+
 Sub GetSEQFields()
     Dim doc As Document
     Dim fld As Field
@@ -155,7 +276,7 @@ End Sub
 ' 插入章编号
 Public Sub InsertChapterSep(ByVal control As IRibbonControl)
     Dim rng As Range
-    Set rng = Selection.Range
+    Set rng = selection.Range
     
     If axMathFound Then
         MsgBox "请使用AxMath菜单下的章节分割标记功能，在每章开始处插入章分隔符！", vbExclamation, C_TITLE
@@ -221,8 +342,8 @@ Public Sub InsertPicNo_RibbonFun(ByVal control As IRibbonControl)
     ur.StartCustomRecord "插入图编号"
     With ActiveDocument
         ' 获取当前章编号
-        Selection.TypeText "图"
-        Set currentRange = Selection.Range
+        selection.TypeText "图"
+        Set currentRange = selection.Range
         Set aField = currentRange.Fields.Add(currentRange, wdFieldEmpty, "SEQ 图 \* ARABIC \s 1", False)
         Set aRange = .Range(currentRange.End, currentRange.End)
         aRange.text = "-"
@@ -230,7 +351,7 @@ Public Sub InsertPicNo_RibbonFun(ByVal control As IRibbonControl)
         Set aRange = .Range(bField.Code.End - 9, bField.Code.End - 9)
         Set bField = aRange.Fields.Add(aRange, wdFieldEmpty, "STYLEREF ""标题 1"" \s", False)
     End With
-    Selection.TypeText " "
+    selection.TypeText " "
     If Not ApplyParaStyle("论文图题", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
     ' ActiveDocument.Fields.ToggleShowCodes
@@ -252,8 +373,8 @@ Public Sub InsertTblNo_RibbonFun(ByVal control As IRibbonControl)
     On Error GoTo ERROR_HANDLER
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "插入表编号"
-    Selection.TypeText "表"
-    Set currentRange = Selection.Range
+    selection.TypeText "表"
+    Set currentRange = selection.Range
     With ActiveDocument
         Set aField = currentRange.Fields.Add(currentRange, wdFieldEmpty, "SEQ 表 \* ARABIC \s 1", False)
         Set aRange = .Range(currentRange.End, currentRange.End)
@@ -262,7 +383,7 @@ Public Sub InsertTblNo_RibbonFun(ByVal control As IRibbonControl)
         Set aRange = .Range(bField.Code.End - 9, bField.Code.End - 9)
         Set bField = aRange.Fields.Add(aRange, wdFieldEmpty, "STYLEREF ""标题 1"" \s", False)
     End With
-    Selection.TypeText " "
+    selection.TypeText " "
     If Not ApplyParaStyle("论文表题", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
     ' ActiveDocument.Fields.ToggleShowCodes
@@ -287,8 +408,8 @@ Public Sub InsertDefNo_RibbonFun(ByVal control As IRibbonControl)
     ur.StartCustomRecord "插入定义编号"
     With ActiveDocument
         ' 获取当前章编号
-        Selection.TypeText "定义"
-        Set currentRange = Selection.Range
+        selection.TypeText "定义"
+        Set currentRange = selection.Range
         Set aField = currentRange.Fields.Add(currentRange, wdFieldEmpty, "SEQ 定义 \* ARABIC \s 1", False)
         Set aRange = .Range(currentRange.End, currentRange.End)
         aRange.text = "-"
@@ -296,12 +417,12 @@ Public Sub InsertDefNo_RibbonFun(ByVal control As IRibbonControl)
         Set aRange = .Range(bField.Code.End - 9, bField.Code.End - 9)
         Set bField = aRange.Fields.Add(aRange, wdFieldEmpty, "STYLEREF ""标题 1"" \s", False)
     End With
-    Selection.TypeText "："
-    currentPos = Selection.Range.Start
+    selection.TypeText "："
+    currentPos = selection.Range.Start
     If Not ApplyParaStyle("论文定义", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
     ' ActiveDocument.Fields.ToggleShowCodes
-    paraStart = Selection.Paragraphs(1).Range.Start
+    paraStart = selection.Paragraphs(1).Range.Start
     Set aRange = ActiveDocument.Range(Start:=paraStart, End:=currentPos)
     aRange.Font.Bold = True
     aRange.Font.NameFarEast = "黑体"
@@ -330,8 +451,8 @@ Public Sub InsertTheoremNo_RibbonFun(ByVal control As IRibbonControl)
     ur.StartCustomRecord "插入定理编号"
     With ActiveDocument
         ' 获取当前章编号
-        Selection.TypeText "定理"
-        Set currentRange = Selection.Range
+        selection.TypeText "定理"
+        Set currentRange = selection.Range
         Set aField = currentRange.Fields.Add(currentRange, wdFieldEmpty, "SEQ 定理 \* ARABIC \s 1", False)
         Set aRange = .Range(currentRange.End, currentRange.End)
         aRange.text = "-"
@@ -339,12 +460,12 @@ Public Sub InsertTheoremNo_RibbonFun(ByVal control As IRibbonControl)
         Set aRange = .Range(bField.Code.End - 9, bField.Code.End - 9)
         Set bField = aRange.Fields.Add(aRange, wdFieldEmpty, "STYLEREF ""标题 1"" \s", False)
     End With
-    Selection.TypeText "："
-    currentPos = Selection.Range.Start
+    selection.TypeText "："
+    currentPos = selection.Range.Start
     If Not ApplyParaStyle("论文定义", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
     ' ActiveDocument.Fields.ToggleShowCodes
-    paraStart = Selection.Paragraphs(1).Range.Start
+    paraStart = selection.Paragraphs(1).Range.Start
     Set aRange = ActiveDocument.Range(Start:=paraStart, End:=currentPos)
     aRange.Font.Bold = True
     aRange.Font.NameFarEast = "黑体"
@@ -373,8 +494,8 @@ Public Sub InsertCorollaryNo_RibbonFun(ByVal control As IRibbonControl)
     ur.StartCustomRecord "插入推论编号"
     With ActiveDocument
         ' 获取当前章编号
-        Selection.TypeText "推论"
-        Set currentRange = Selection.Range
+        selection.TypeText "推论"
+        Set currentRange = selection.Range
         Set aField = currentRange.Fields.Add(currentRange, wdFieldEmpty, "SEQ 推论 \* ARABIC \s 1", False)
         Set aRange = .Range(currentRange.End, currentRange.End)
         aRange.text = "-"
@@ -382,12 +503,12 @@ Public Sub InsertCorollaryNo_RibbonFun(ByVal control As IRibbonControl)
         Set aRange = .Range(bField.Code.End - 9, bField.Code.End - 9)
         Set bField = aRange.Fields.Add(aRange, wdFieldEmpty, "STYLEREF ""标题 1"" \s", False)
     End With
-    Selection.TypeText "："
-    currentPos = Selection.Range.Start
+    selection.TypeText "："
+    currentPos = selection.Range.Start
     If Not ApplyParaStyle("论文定义", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
     ' ActiveDocument.Fields.ToggleShowCodes
-    paraStart = Selection.Paragraphs(1).Range.Start
+    paraStart = selection.Paragraphs(1).Range.Start
     Set aRange = ActiveDocument.Range(Start:=paraStart, End:=currentPos)
     aRange.Font.Bold = True
     aRange.Font.NameFarEast = "黑体"
@@ -416,8 +537,8 @@ Public Sub InsertLemmaNo_RibbonFun(ByVal control As IRibbonControl)
     ur.StartCustomRecord "插入引理编号"
     With ActiveDocument
         ' 获取当前章编号
-        Selection.TypeText "引理"
-        Set currentRange = Selection.Range
+        selection.TypeText "引理"
+        Set currentRange = selection.Range
         Set aField = currentRange.Fields.Add(currentRange, wdFieldEmpty, "SEQ 引理 \* ARABIC \s 1", False)
         Set aRange = .Range(currentRange.End, currentRange.End)
         aRange.text = "-"
@@ -425,12 +546,12 @@ Public Sub InsertLemmaNo_RibbonFun(ByVal control As IRibbonControl)
         Set aRange = .Range(bField.Code.End - 9, bField.Code.End - 9)
         Set bField = aRange.Fields.Add(aRange, wdFieldEmpty, "STYLEREF ""标题 1"" \s", False)
     End With
-    Selection.TypeText "："
-    currentPos = Selection.Range.Start
+    selection.TypeText "："
+    currentPos = selection.Range.Start
     If Not ApplyParaStyle("论文定义", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
     ' ActiveDocument.Fields.ToggleShowCodes
-    paraStart = Selection.Paragraphs(1).Range.Start
+    paraStart = selection.Paragraphs(1).Range.Start
     Set aRange = ActiveDocument.Range(Start:=paraStart, End:=currentPos)
     aRange.Font.Bold = True
     aRange.Font.NameFarEast = "黑体"
@@ -459,8 +580,8 @@ Public Sub InsertProblemNo_RibbonFun(ByVal control As IRibbonControl)
     ur.StartCustomRecord "插入问题编号"
     With ActiveDocument
         ' 获取当前章编号
-        Selection.TypeText "问题"
-        Set currentRange = Selection.Range
+        selection.TypeText "问题"
+        Set currentRange = selection.Range
         Set aField = currentRange.Fields.Add(currentRange, wdFieldEmpty, "SEQ 问题 \* ARABIC \s 1", False)
         Set aRange = .Range(currentRange.End, currentRange.End)
         aRange.text = "-"
@@ -468,12 +589,12 @@ Public Sub InsertProblemNo_RibbonFun(ByVal control As IRibbonControl)
         Set aRange = .Range(bField.Code.End - 9, bField.Code.End - 9)
         Set bField = aRange.Fields.Add(aRange, wdFieldEmpty, "STYLEREF ""标题 1"" \s", False)
     End With
-    Selection.TypeText "："
-    currentPos = Selection.Range.Start
+    selection.TypeText "："
+    currentPos = selection.Range.Start
     If Not ApplyParaStyle("论文定义", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
     ' ActiveDocument.Fields.ToggleShowCodes
-    paraStart = Selection.Paragraphs(1).Range.Start
+    paraStart = selection.Paragraphs(1).Range.Start
     Set aRange = ActiveDocument.Range(Start:=paraStart, End:=currentPos)
     aRange.Font.Bold = True
     aRange.Font.NameFarEast = "黑体"
@@ -502,8 +623,8 @@ Public Sub InsertConclusionNo_RibbonFun(ByVal control As IRibbonControl)
     ur.StartCustomRecord "插入结论编号"
     With ActiveDocument
         ' 获取当前章编号
-        Selection.TypeText "结论"
-        Set currentRange = Selection.Range
+        selection.TypeText "结论"
+        Set currentRange = selection.Range
         Set aField = currentRange.Fields.Add(currentRange, wdFieldEmpty, "SEQ 结论 \* ARABIC \s 1", False)
         Set aRange = .Range(currentRange.End, currentRange.End)
         aRange.text = "-"
@@ -511,12 +632,12 @@ Public Sub InsertConclusionNo_RibbonFun(ByVal control As IRibbonControl)
         Set aRange = .Range(bField.Code.End - 9, bField.Code.End - 9)
         Set bField = aRange.Fields.Add(aRange, wdFieldEmpty, "STYLEREF ""标题 1"" \s", False)
     End With
-    Selection.TypeText "："
-    currentPos = Selection.Range.Start
+    selection.TypeText "："
+    currentPos = selection.Range.Start
     If Not ApplyParaStyle("论文定义", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
     ' ActiveDocument.Fields.ToggleShowCodes
-    paraStart = Selection.Paragraphs(1).Range.Start
+    paraStart = selection.Paragraphs(1).Range.Start
     Set aRange = ActiveDocument.Range(Start:=paraStart, End:=currentPos)
     aRange.Font.Bold = True
     aRange.Font.NameFarEast = "黑体"
@@ -541,12 +662,12 @@ Public Sub InsertAlgorithmTbl_RibbonFun(ByVal control As IRibbonControl)
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "插入算法"
     
-    Set rng = Selection.Range
+    Set rng = selection.Range
     rng.Collapse Direction:=wdCollapseEnd
     
     InsertAlgorithmNo
     
-    Set rng = Selection.Paragraphs(1).Range
+    Set rng = selection.Paragraphs(1).Range
     rng.Collapse Direction:=wdCollapseEnd
     rng.InsertParagraphAfter
     
@@ -631,8 +752,8 @@ Private Sub InsertAlgorithmNo()
     ur.StartCustomRecord "插入算法编号"
     With ActiveDocument
         ' 获取当前章编号
-        Selection.TypeText "算法"
-        Set currentRange = Selection.Range
+        selection.TypeText "算法"
+        Set currentRange = selection.Range
         Set aField = currentRange.Fields.Add(currentRange, wdFieldEmpty, "SEQ 算法 \* ARABIC \s 1", False)
         Set aRange = .Range(currentRange.End, currentRange.End)
         aRange.text = "-"
@@ -640,7 +761,7 @@ Private Sub InsertAlgorithmNo()
         Set aRange = .Range(bField.Code.End - 9, bField.Code.End - 9)
         Set bField = aRange.Fields.Add(aRange, wdFieldEmpty, "STYLEREF ""标题 1"" \s", False)
     End With
-    Selection.TypeText " "
+    selection.TypeText " "
     If Not ApplyParaStyle("论文算法标题", 0, False) Then err.Raise ERR_CANCEL
     ActiveDocument.Fields.Update
     ' ActiveDocument.Fields.ToggleShowCodes
@@ -703,11 +824,11 @@ Public Sub H3_RibbonFun(control As IRibbonControl)
     On Error GoTo ERROR_HANDLER
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "应用标题3样式"
-    Set SaveRange = Selection.Range
+    Set SaveRange = selection.Range
     'Apply the built-in Heading 3 style (paragraph style)
     If Not ApplyParaStyle("标题 3", 0, False) Then err.Raise ERR_CANCEL
     SaveRange.Select
-    With Selection
+    With selection
         'Remove space before, If H3 directly follows H2 Or H1
         If Not .Paragraphs(1).Previous Is Nothing Then
             If (.Paragraphs(1).Previous.Style = "标题 2") Or (.Paragraphs(1).Previous.Style = "标题 1") Then
@@ -733,11 +854,11 @@ Public Sub H4_RibbonFun(control As IRibbonControl)
     On Error GoTo ERROR_HANDLER
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "应用标题4样式"
-    Set SaveRange = Selection.Range
+    Set SaveRange = selection.Range
     'Apply the built-in Heading 4 style (paragraph style)
     If Not ApplyParaStyle("标题 4", 0, False) Then err.Raise ERR_CANCEL
     SaveRange.Select
-    With Selection
+    With selection
         'Remove space before, If H4 directly follows H3, H2 Or H1
         If Not .Paragraphs(1).Previous Is Nothing Then
             If (.Paragraphs(1).Previous.Style = "标题 3") Or (.Paragraphs(1).Previous.Style = "标题 2") Or (.Paragraphs(1).Previous.Style = "标题 1") Then
@@ -763,11 +884,11 @@ Public Sub H5_RibbonFun(control As IRibbonControl)
     On Error GoTo ERROR_HANDLER
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "应用标题5样式"
-    Set SaveRange = Selection.Range
+    Set SaveRange = selection.Range
     'Apply the built-in Heading 5 style (paragraph style)
     If Not ApplyParaStyle("标题 5", 0, False) Then err.Raise ERR_CANCEL
     SaveRange.Select
-    With Selection
+    With selection
         'Remove space before, If H5 directly follows H4, H3, H2 Or H1
         If Not .Paragraphs(1).Previous Is Nothing Then
             If (.Paragraphs(1).Previous.Style = "标题 4") Or (.Paragraphs(1).Previous.Style = "标题 3") Or (.Paragraphs(1).Previous.Style = "标题 2") Or (.Paragraphs(1).Previous.Style = "标题 1") Then
@@ -793,11 +914,11 @@ Public Sub H6_RibbonFun(control As IRibbonControl)
     On Error GoTo ERROR_HANDLER
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "应用标题6样式"
-    Set SaveRange = Selection.Range
+    Set SaveRange = selection.Range
     'Apply the built-in Heading 6 style (paragraph style)
     If Not ApplyParaStyle("标题 6", 0, False) Then err.Raise ERR_CANCEL
     SaveRange.Select
-    With Selection
+    With selection
         'Remove space before, If H5 directly follows H5, H4, H3, H2 Or H1
         If Not .Paragraphs(1).Previous Is Nothing Then
             If (.Paragraphs(1).Previous.Style = "标题 5") Or (.Paragraphs(1).Previous.Style = "标题 4") Or (.Paragraphs(1).Previous.Style = "标题 3") Or (.Paragraphs(1).Previous.Style = "标题 2") Or (.Paragraphs(1).Previous.Style = "标题 1") Then
@@ -822,7 +943,7 @@ Public Sub MakeBulletItem_RibbonFun(control As IRibbonControl)
     On Error GoTo ERROR_HANDLER
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "应用无序列表样式"
-    Set objLastSelPara = Selection.Paragraphs(Selection.Paragraphs.Count)
+    Set objLastSelPara = selection.Paragraphs(selection.Paragraphs.Count)
     'Apply the "bulletitem" style
     If Not ApplyParaStyle("论文无序列表", 0, True) Then err.Raise ERR_CANCEL
     Application.ScreenRefresh
@@ -842,7 +963,7 @@ Public Sub MakeNumNoIndentItem_RibbonFun(control As IRibbonControl)
     On Error GoTo ERROR_HANDLER
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "应用无缩序号样式"
-    Set objLastSelPara = Selection.Paragraphs(Selection.Paragraphs.Count)
+    Set objLastSelPara = selection.Paragraphs(selection.Paragraphs.Count)
     'Apply the "dashitem" style
     If Not ApplyParaStyle("论文无缩序号", 0, True) Then err.Raise ERR_CANCEL
     Application.ScreenRefresh
@@ -864,7 +985,7 @@ Public Sub MakeNumItem_RibbonFun(control As IRibbonControl)
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "应用有序列表样式"
     'Save the first And last paragraph
-    Set objLastNumPara = Selection.Paragraphs(Selection.Paragraphs.Count)
+    Set objLastNumPara = selection.Paragraphs(selection.Paragraphs.Count)
     'Apply the "numitem" style
     If Not ApplyParaStyle("论文有序列表", 0, True) Then err.Raise ERR_CANCEL
     '    CalcNumIndent Selection.Paragraphs(1), Selection.Paragraphs(Selection.Paragraphs.Count)
@@ -922,17 +1043,17 @@ Public Sub ListLevelUp_RibbonFun(control As IRibbonControl)
     On Error GoTo ERROR_HANDLER
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "提升列表级别"
-    If Selection.Style Is Nothing Then
+    If selection.Style Is Nothing Then
         err.Raise ERR_USRMSG, , "只能选择相同样式的段落!"
     End If
-    Select Case Selection.ParagraphFormat.Style
+    Select Case selection.ParagraphFormat.Style
         Case "论文有序列表", "论文无序列表", "论文无缩序号"
-            If Selection.Range.ListFormat.ListLevelNumber > 9 Then
+            If selection.Range.ListFormat.ListLevelNumber > 9 Then
                 err.Raise ERR_USRMSG, , "只能选择相同样式的段落!"
-            ElseIf Selection.Range.ListFormat.ListLevelNumber > 6 Then
+            ElseIf selection.Range.ListFormat.ListLevelNumber > 6 Then
                 err.Raise ERR_USRMSG, , "已经达到了列表的最大级别!"
             End If
-            Selection.Range.ListFormat.ListLevelNumber = Selection.Range.ListFormat.ListLevelNumber + 1
+            selection.Range.ListFormat.ListLevelNumber = selection.Range.ListFormat.ListLevelNumber + 1
         Case Else
             err.Raise ERR_USRMSG, , "该功能仅对无序列表、有序列表、无所列表有效!"
     End Select
@@ -953,20 +1074,20 @@ Public Sub ListLevelDown_RibbonFun(control As IRibbonControl)
     On Error GoTo ERROR_HANDLER
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "降低列表级别"
-    If Selection.Style Is Nothing Then
+    If selection.Style Is Nothing Then
         err.Raise ERR_USRMSG, , "只能选择相同样式的段落!"
     End If
-    Select Case Selection.ParagraphFormat.Style
+    Select Case selection.ParagraphFormat.Style
         Case "论文无序列表", "论文无缩序号"
-            If Selection.Range.ListFormat.ListLevelNumber < 2 Then
+            If selection.Range.ListFormat.ListLevelNumber < 2 Then
                 err.Raise ERR_CANCEL
             End If
-            Selection.Range.ListFormat.ListLevelNumber = Selection.Range.ListFormat.ListLevelNumber - 1
+            selection.Range.ListFormat.ListLevelNumber = selection.Range.ListFormat.ListLevelNumber - 1
         Case "论文有序列表"
-            If Selection.Range.ListFormat.ListLevelNumber < 2 Then
+            If selection.Range.ListFormat.ListLevelNumber < 2 Then
                 err.Raise ERR_CANCEL
             End If
-            Selection.Range.ListFormat.ListLevelNumber = Selection.Range.ListFormat.ListLevelNumber - 1
+            selection.Range.ListFormat.ListLevelNumber = selection.Range.ListFormat.ListLevelNumber - 1
             '          CalcNumIndent Selection.Paragraphs(1), Selection.Paragraphs(Selection.Paragraphs.Count)
         Case Else
             err.Raise ERR_USRMSG, , "该功能仅对无序列表、有序列表、无所列表有效!"
@@ -989,9 +1110,9 @@ Public Sub RestartNumbering_RibbonFun(control As IRibbonControl)
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "切换序号"
     
-    Selection.Collapse wdCollapseStart
-    If Selection.Paragraphs.Count < 1 Then err.Raise ERR_CANCEL
-    Set objLF = Selection.Paragraphs(1).Range.ListFormat
+    selection.Collapse wdCollapseStart
+    If selection.Paragraphs.Count < 1 Then err.Raise ERR_CANCEL
+    Set objLF = selection.Paragraphs(1).Range.ListFormat
     If objLF Is Nothing Then
         err.Raise ERR_USRMSG, , "该功能仅对自动编号列表有效!"
     ElseIf objLF.ListTemplate Is Nothing Then
@@ -1030,10 +1151,10 @@ Public Sub RestorePageSetup()
     With ActiveDocument.PageSetup
         .PageHeight = MillimetersToPoints(297)
         .PageWidth = MillimetersToPoints(210)
-        .TopMargin = MillimetersToPoints(25.4)
-        .BottomMargin = MillimetersToPoints(25.4)
-        .LeftMargin = MillimetersToPoints(31.7)
-        .RightMargin = MillimetersToPoints(31.7)
+        .TopMargin = MillimetersToPoints(25)
+        .BottomMargin = MillimetersToPoints(25)
+        .LeftMargin = MillimetersToPoints(30)
+        .RightMargin = MillimetersToPoints(30)
         .HeaderDistance = MillimetersToPoints(15)
         .FooterDistance = MillimetersToPoints(17.5)
         .Orientation = wdOrientPortrait
@@ -1072,16 +1193,16 @@ Private Function StdPageSetup() As Boolean
         If Abs(.PageWidth - MillimetersToPoints(210)) > 1 Then
             Exit Function
         End If
-        If Abs(.TopMargin - MillimetersToPoints(25.4)) > 1 Then
+        If Abs(.TopMargin - MillimetersToPoints(25)) > 1 Then
             Exit Function
         End If
-        If Abs(.BottomMargin - MillimetersToPoints(25.4)) > 1 Then
+        If Abs(.BottomMargin - MillimetersToPoints(25)) > 1 Then
             Exit Function
         End If
-        If Abs(.LeftMargin - MillimetersToPoints(31.7)) > 1 Then
+        If Abs(.LeftMargin - MillimetersToPoints(30)) > 1 Then
             Exit Function
         End If
-        If Abs(.RightMargin - MillimetersToPoints(31.7)) > 1 Then
+        If Abs(.RightMargin - MillimetersToPoints(30)) > 1 Then
             Exit Function
         End If
         If Abs(.HeaderDistance - MillimetersToPoints(15)) > 1 Then
@@ -1781,6 +1902,60 @@ Private Sub CheckEnsureStyles()
             .LinkToListTemplate ListGalleries(wdNumberGallery).ListTemplates(7), 1
         End With
     End If
+    If AddMissingStyle("TOC 1", wdStyleTypeParagraph, objStyle) Then
+        With objStyle
+            .BaseStyle = wdStyleNormal
+            .NextParagraphStyle = "论文正文"
+            .ParagraphFormat.SpaceBefore = 0
+            .ParagraphFormat.SpaceAfter = 0
+            .ParagraphFormat.CharacterUnitFirstLineIndent = 0
+            .ParagraphFormat.CharacterUnitLeftIndent = 0
+            .ParagraphFormat.LineSpacingRule = wdLineSpaceExactly
+            .ParagraphFormat.LineSpacing = 20
+            .ParagraphFormat.Alignment = wdAlignParagraphJustify
+            .Font.NameFarEast = "宋体"
+            .Font.NameAscii = "Times New Roman"
+            .Font.Bold = False
+            .Font.Size = 12
+            .QuickStyle = True
+        End With
+    End If
+    If AddMissingStyle("TOC 2", wdStyleTypeParagraph, objStyle) Then
+        With objStyle
+            .BaseStyle = wdStyleNormal
+            .NextParagraphStyle = "论文正文"
+            .ParagraphFormat.SpaceBefore = 0
+            .ParagraphFormat.SpaceAfter = 0
+            .ParagraphFormat.CharacterUnitFirstLineIndent = 0
+            .ParagraphFormat.CharacterUnitLeftIndent = 2
+            .ParagraphFormat.LineSpacingRule = wdLineSpaceExactly
+            .ParagraphFormat.LineSpacing = 20
+            .ParagraphFormat.Alignment = wdAlignParagraphJustify
+            .Font.NameFarEast = "宋体"
+            .Font.NameAscii = "Times New Roman"
+            .Font.Bold = False
+            .Font.Size = 12
+            .QuickStyle = True
+        End With
+    End If
+    If AddMissingStyle("TOC 3", wdStyleTypeParagraph, objStyle) Then
+        With objStyle
+            .BaseStyle = wdStyleNormal
+            .NextParagraphStyle = "论文正文"
+            .ParagraphFormat.SpaceBefore = 0
+            .ParagraphFormat.SpaceAfter = 0
+            .ParagraphFormat.CharacterUnitFirstLineIndent = 0
+            .ParagraphFormat.CharacterUnitLeftIndent = 4
+            .ParagraphFormat.LineSpacingRule = wdLineSpaceExactly
+            .ParagraphFormat.LineSpacing = 20
+            .ParagraphFormat.Alignment = wdAlignParagraphJustify
+            .Font.NameFarEast = "宋体"
+            .Font.NameAscii = "Times New Roman"
+            .Font.Bold = False
+            .Font.Size = 12
+            .QuickStyle = True
+        End With
+    End If
     
     MsgBox "已经检查了所有的模板样式，并对必要的样式进行了恢复!", vbInformation Or vbOKOnly, C_TITLE
     Application.ScreenRefresh
@@ -1886,7 +2061,7 @@ Private Function ApplyParaStyle(ByVal StyleName As String, ByVal BuiltInStyleID 
         "请使用'模板检查恢复'按钮对其进行恢复！"
     End If
     'If objStyle <> "论文正文" Then Exit Function
-    With Selection
+    With selection
         'check whether text is highlighted
         If .Start <> .End Then
             'some text is selected
@@ -1931,7 +2106,7 @@ Private Function ApplyCharStyle(ByVal StyleName As String, ByVal BuiltInStyleID 
         "请使用'模板检查恢复'按钮对其进行恢复！"
     End If
     If objStyle <> "论文正文" Then Exit Function
-    With Selection
+    With selection
         'If no text is highlighted, expand the selection up To the Next space Or paragraph
         If .Start = .End Then
             .MoveStartUntil " " & vbCrLf, wdBackward
@@ -1961,34 +2136,34 @@ Public Sub MakeStandard_RibbonFun(control As IRibbonControl)
     On Error GoTo ERROR_HANDLER
     Set ur = Application.UndoRecord
     ur.StartCustomRecord "应用正文样式"
-    If Selection.ParagraphFormat.Style Is Nothing Then
+    If selection.ParagraphFormat.Style Is Nothing Then
         booApplyCharFormat = False
-    ElseIf (Selection.Font.name <> Selection.ParagraphFormat.Style.Font.name) Or _
-            (Selection.Font.Italic <> Selection.ParagraphFormat.Style.Font.Italic) Or _
-            (Selection.Font.Bold <> Selection.ParagraphFormat.Style.Font.Bold) Then
+    ElseIf (selection.Font.name <> selection.ParagraphFormat.Style.Font.name) Or _
+            (selection.Font.Italic <> selection.ParagraphFormat.Style.Font.Italic) Or _
+            (selection.Font.Bold <> selection.ParagraphFormat.Style.Font.Bold) Then
         booApplyCharFormat = True
-    ElseIf Selection.Start = Selection.End Then
+    ElseIf selection.Start = selection.End Then
         booApplyCharFormat = False
-    ElseIf InStr(1, Selection.text, Chr(13)) = 0 Then
+    ElseIf InStr(1, selection.text, Chr(13)) = 0 Then
         booApplyCharFormat = True
     Else
         booApplyCharFormat = False
     End If
-    Set objRangeSave = Selection.Range
+    Set objRangeSave = selection.Range
     If booApplyCharFormat Then
         ApplyCharStyle "论文正文", 0
     Else
         'NormalSpacing control
         'Separate the first paragraph
-        Set objFirstPara = Selection.Paragraphs(1)
+        Set objFirstPara = selection.Paragraphs(1)
         If objFirstPara Is Nothing Then err.Raise ERR_CANCEL
         'If more than one paragraph is selected, first format the rest of the selection
-        If Selection.End > objFirstPara.Range.End Then
-            Selection.MoveStart wdParagraph, 1
+        If selection.End > objFirstPara.Range.End Then
+            selection.MoveStart wdParagraph, 1
             ApplyParaStyle "论文正文", 0, True
         End If
         objFirstPara.Range.Select
-        If Selection.Style = ActiveDocument.Styles("论文正文").NameLocal Then
+        If selection.Style = ActiveDocument.Styles("论文正文").NameLocal Then
             ApplyCharStyle "论文正文", 0
         Else
             ApplyParaStyle "论文正文", 0, True
@@ -2054,8 +2229,8 @@ Sub NestedField()
     Dim aRange As Range
     Dim currentRange As Range
     
-    Selection.TypeText "图"
-    Set currentRange = Selection.Range
+    selection.TypeText "图"
+    Set currentRange = selection.Range
     With ActiveDocument
         Set aField = currentRange.Fields.Add(currentRange, wdFieldEmpty, "MACROBUTTON AMMPlaceRM \* MERGEFORMAT -", False) '创建空白域，并写入域代码
         Set aRange = .Range(aField.Code.End - 2, aField.Code.End - 2)
@@ -2066,7 +2241,7 @@ Sub NestedField()
         Set bField = aRange.Fields.Add(aRange, wdFieldEmpty, "SEQ 表 \* ARABIC \s 1", False) '在aRange对象位置插入域
         aField.Update '更新域，效果等同于显示域结果
     End With
-    Selection.TypeText " "
+    selection.TypeText " "
 End Sub
 
 Sub ToggleFieldCode()
@@ -2139,17 +2314,17 @@ Sub ListAllBookmarks()
     ' 创建新文档显示结果
     Dim newDoc As Document
     Set newDoc = Documents.Add
-    newDoc.Content.text = "文档中共有 " & doc.Bookmarks.Count & " 个书签：" & vbCrLf & vbCrLf
+    newDoc.content.text = "文档中共有 " & doc.Bookmarks.Count & " 个书签：" & vbCrLf & vbCrLf
     
     ' 列出所有书签
     For Each bm In doc.Bookmarks
-        newDoc.Content.InsertAfter i & ". 书签名称: " & bm.name & vbCrLf
-        newDoc.Content.InsertAfter "   位置文本: " & bm.Range.text & vbCrLf & vbCrLf
+        newDoc.content.InsertAfter i & ". 书签名称: " & bm.name & vbCrLf
+        newDoc.content.InsertAfter "   位置文本: " & bm.Range.text & vbCrLf & vbCrLf
         i = i + 1
     Next bm
     
     ' 格式化输出文档
-    newDoc.Content.Paragraphs.Format.SpaceAfter = 0
+    newDoc.content.Paragraphs.Format.SpaceAfter = 0
     newDoc.Range(0, 0).Select
 End Sub
 
@@ -2228,14 +2403,14 @@ Public Sub InsertCrossReference_RibbonFun(control As IRibbonControl)
     Call InsertCrossReference_
     
     ' 消除交叉引用的格式，使其和论文正文样式一直并更新
-    Set rng = Selection.Range
+    Set rng = selection.Range
     If rng.Start > 0 Then
         rng.MoveStart wdCharacter, -1
         If rng.Fields.Count > 0 Then
             rng.Fields(1).Select
-            Selection.ClearFormatting
-            Selection.Style = ActiveDocument.Styles("论文正文")
-            Selection.Collapse Direction:=wdCollapseEnd
+            selection.ClearFormatting
+            selection.Style = ActiveDocument.Styles("论文正文")
+            selection.Collapse Direction:=wdCollapseEnd
         Else
             rng.MoveStart wdCharacter, 1
         End If
@@ -2543,7 +2718,7 @@ Function InsertCrossReference_(Optional isActiveState As Variant)
         ' Special Function: If the cursor is inside a wdFieldRef-field, Then
         ' - toggle the display among the configured options
         ' - remember the New status For future inserts.
-        Index = CursorInField(Selection.Range) ' would fail, If .View.ShowFieldCodes = True
+        Index = CursorInField(selection.Range) ' would fail, If .View.ShowFieldCodes = True
         If Index <> 0 Then
             ' ====================================================================================
             ' ===== Toggle display:
@@ -2613,7 +2788,7 @@ Function InsertCrossReference_(Optional isActiveState As Variant)
             ' ====================================================================================
             ' ===== Insert temporary Bookmark:
             ' Remember the current position within the document by putting a bookmark there:
-            ActiveDocument.Bookmarks.Add name:="tempforInsert", Range:=Selection.Range
+            ActiveDocument.Bookmarks.Add name:="tempforInsert", Range:=selection.Range
             isActive = True ' remember that we are in Insertion-Mode
             '            Call RibbonControl.setAButtonState("BtnTCrossRef", True)
         End If
@@ -2627,12 +2802,12 @@ Function InsertCrossReference_(Optional isActiveState As Variant)
         ' ===== Find out the type of the element To cross-reference To.
         '       It could be a Headline, Figure, Bookmark, ...
         paramRefType = ""
-        Select Case Selection.Paragraphs(1).Range.ListFormat.ListType
+        Select Case selection.Paragraphs(1).Range.ListFormat.ListType
             Case wdListSimpleNumbering ' bullet lists, numbered Elements
                 paramRefType = wdRefTypeNumberedItem
                 paramRefKind = wdNumberRelativeContext
-                paramRefText = Selection.Paragraphs(1).Range.ListFormat.ListString & _
-                " " & Trim(Selection.Paragraphs(1).Range.text)
+                paramRefText = selection.Paragraphs(1).Range.ListFormat.ListString & _
+                " " & Trim(selection.Paragraphs(1).Range.text)
                 paramRefText = Replace(paramRefText, Chr(13), "")
                 found = getXRefIndex(paramRefType, paramRefText, Index)
                 
@@ -2650,16 +2825,16 @@ Function InsertCrossReference_(Optional isActiveState As Variant)
                 Dim oDoc As Document
                 Dim oRange As Range
                 Set oDoc = ActiveDocument
-                Set oRange = oDoc.Range(Start:=Selection.Range.Start, End:=Selection.Range.End)
+                Set oRange = oDoc.Range(Start:=selection.Range.Start, End:=selection.Range.End)
                 'Debug.Print oRange.ListFormat.ListString
                 paramRefText = oRange.ListFormat.ListString
                 found = getXRefIndex(paramRefType, paramRefText, Index)
                 
             Case wdListNoNumbering ' SEQ-numbered items, Bookmarks And Figure/Table/Equation/...
                 'paramRefText = Trim(Selection.Paragraphs(1).Range.text)
-                Set paramRefRnge = Selection.Paragraphs(1).Range
+                Set paramRefRnge = selection.Paragraphs(1).Range
                 paramRefText = Trim(paramRefRnge.text)
-                With Selection.Paragraphs(1)
+                With selection.Paragraphs(1)
                     ' There could be different fields. We look For the first of type <wdFieldSequence>:
                     For i = 1 To .Range.Fields.Count
                         If .Range.Fields(i).Type = wdFieldSequence Then
@@ -2689,7 +2864,7 @@ Function InsertCrossReference_(Optional isActiveState As Variant)
                         SEQLettering = Replace(SEQLettering, Chr(30), "-")
                         'SEQLettering = Replace(SEQLettering, Chr(160), "")
                         ' Get the category:
-                        Set paramRefRnge = Selection.Paragraphs(1).Range
+                        Set paramRefRnge = selection.Paragraphs(1).Range
                         ' Extract the Category, e.g. in " SEQ Fig. \* ARABIC" that is "Fig.":
                         'SEQCategory = Trim(paramRefRnge.Fields(i).Code.Words(3))
                         SEQCategory = regEx(paramRefRnge.Fields(i).Code, "\S+\s+(\S+)")
@@ -2712,7 +2887,7 @@ trybookmark:
                             Dim bmlen As Variant
                             Dim bmlen2 As Long
                             bmlen = ""
-                            For Each Element In Selection.Bookmarks
+                            For Each Element In selection.Bookmarks
                                 bmlen2 = Len(Element.Range.text)
                                 If bmlen2 < bmlen Or bmlen = "" Then
                                     bname = Element.name
@@ -2740,7 +2915,7 @@ cannot:
             prompt = "无法在此处插入交叉引用。" & vbNewLine & "请尝试在其他位置插入交叉引用，或者取消。"
             response = MsgBox(prompt, 1)
             If response = vbCancel Then
-                Selection.GoTo what:=wdGoToBookmark, name:="tempforInsert"
+                selection.GoTo what:=wdGoToBookmark, name:="tempforInsert"
                 If ActiveDocument.Bookmarks.Exists("tempforInsert") Then
                     ActiveDocument.Bookmarks.item("tempforInsert").Delete
                 End If
@@ -2758,11 +2933,11 @@ retryfinding:
             ' Refresh, ohne dass es als 膎derung getracked wird:
             storeTracking = ActiveDocument.TrackRevisions
             ActiveDocument.TrackRevisions = False
-            Selection.HomeKey Unit:=wdStory
+            selection.HomeKey Unit:=wdStory
             
             Do ' alle SEQ-Felder abklappern
-                lastpos = Selection.End
-                Selection.GoTo what:=wdGoToField, name:="SEQ"
+                lastpos = selection.End
+                selection.GoTo what:=wdGoToField, name:="SEQ"
                 'On Error Resume Next
                 Debug.Print "Err.Number = " & err.Number
                 allowed = False
@@ -2772,8 +2947,8 @@ retryfinding:
                     If IsInArray(paramRefType, Config("cfgCrRf_ST_KeyWd")) Then
                         allowed = True
                         searchstring = " SEQ " & linktype
-                        If Left(Selection.NextField.Code.text, Len(searchstring)) = searchstring Then
-                            Selection.Fields.Update
+                        If Left(selection.NextField.Code.text, Len(searchstring)) = searchstring Then
+                            selection.Fields.Update
                         End If
                     End If
                 End If
@@ -2793,14 +2968,14 @@ retryfinding:
                     GoTo CleanExit
                 End If
                 
-            Loop While (lastpos <> Selection.End)
+            Loop While (lastpos <> selection.End)
             retry = True
             ActiveDocument.TrackRevisions = storeTracking
             GoTo retryfinding
         End If
         
         ' Jetzt das eigentliche Einf黦en des Querverweises an der urspr黱glichen Stelle:
-        Selection.GoTo what:=wdGoToBookmark, name:="tempforInsert"
+        selection.GoTo what:=wdGoToBookmark, name:="tempforInsert"
         If found = True Then
             ' Read the correct array the currently selected options:
             Select Case paramRefReal
@@ -2986,15 +3161,15 @@ Private Function InsertCrossRefs(mode As Integer, _
             ' the last part was a text - like this the user can continue To toggle.
             ' Hence we have To move the cursor a bit back:
             If (moveCursor = True) And (Len(thePartOld) > 0) And (isCodeOld = False) Then
-                Selection.MoveLeft wdCharacter, Len(thePartOld)
+                selection.MoveLeft wdCharacter, Len(thePartOld)
             End If
             Exit Do
         End If
         
         ' If it's a text, insert it
         If isCode = False Then
-            Application.Selection.InsertAfter thepart
-            Application.Selection.Move wdCharacter, 1
+            Application.selection.InsertAfter thepart
+            Application.selection.Move wdCharacter, 1
         Else
             ' It is a code sequence:
             ' When we modify With method = <0>, we have received a fieldcode <refcode>.
@@ -3073,15 +3248,15 @@ Private Function Insert1CrossRef(mode As Integer, Optional param1 As Variant, _
                 .Code.text = " " & myCode & " "
                 
                 ' If the cursor is now behind the field, it must be moved back:
-                If Selection.End > .result.End Then
-                    Selection.Move wdCharacter, -1
+                If selection.End > .result.End Then
+                    selection.Move wdCharacter, -1
                 End If
-                Selection.Fields.Update
+                selection.Fields.Update
                 ' Now, the cursor will be exactly behind the field. That's fine.
                 
                 ' If the cursor is now in front of the field, it must be moved forward:
-                If Selection.Start < .result.Start Then
-                    Selection.Start = .result.End
+                If selection.Start < .result.Start Then
+                    selection.Start = .result.End
                 End If
             End With
             
@@ -3151,16 +3326,16 @@ Private Function Insert1CrossRef(mode As Integer, Optional param1 As Variant, _
             
             ' ===== Insert the cross reference, Not all parameters might already be correct:
             '                                  RefType, RefKind, RefIndx, hyperlink,  position     sepNr , seperator
-            Call Selection.InsertCrossReference(param1, param0, param2, inclHyperlink, inclPosition, False, "")
+            Call selection.InsertCrossReference(param1, param0, param2, inclHyperlink, inclPosition, False, "")
             
             param3 = Replace(param3, "PAGEREF", "")
             param3 = Replace(param3, "REF", "")
             
             ' Make sure, the cursor is still in the field
             Do
-                idx = CursorInField(Selection.Range)
+                idx = CursorInField(selection.Range)
                 If idx <> 0 Then Exit Do
-                Selection.MoveLeft wdCharacter, 1
+                selection.MoveLeft wdCharacter, 1
             Loop While True
             
             
@@ -3176,13 +3351,13 @@ Private Function Insert1CrossRef(mode As Integer, Optional param1 As Variant, _
             'Application.StatusBar = "Cross Reference inserted of type <" & param3 & ">."
             
         Case 2 ' Insert New via .Fields.Add
-            Selection.Fields.Add Range:=Selection.Range, Type:=wdFieldEmpty, PreserveFormatting:=False
-            Selection.TypeText text:=Trim(param4)
-            Selection.Fields.Update
+            selection.Fields.Add Range:=selection.Range, Type:=wdFieldEmpty, PreserveFormatting:=False
+            selection.TypeText text:=Trim(param4)
+            selection.Fields.Update
             
             ' Put Cursor behind the New field:
-            Selection.Move wdCharacter, 1
-            Selection.Fields.Update
+            selection.Move wdCharacter, 1
+            selection.Fields.Update
             'Application.StatusBar = "Cross Reference inserted <" & param4 & ">."
             
         Case Else
@@ -3257,7 +3432,7 @@ Private Function MultifieldDelete(optionArray As Variant, _
             If j = -1 Then
                 ' Make sure, the Cursor is immediately behind the field:
                 ActiveDocument.Fields(Index).Update
-                Set myRange = Selection.Range
+                Set myRange = selection.Range
                 
                 ' If it is a multipart thingy, include the last text in our Range:
                 If isCode = False Then
@@ -3375,13 +3550,13 @@ Private Function MultifieldDelete(optionArray As Variant, _
     LenCut = theEnd - theStart
     myRange.Cut
     ' Because Word may try To be smart by removing a lonely blank:
-    If Selection.Start < theStart Then
-        Selection.InsertBefore (" ")
-        Selection.Move wdCharacter, 1
+    If selection.Start < theStart Then
+        selection.InsertBefore (" ")
+        selection.Move wdCharacter, 1
     End If
     If ActiveDocument.StoryRanges(wdMainTextStory).StoryLength < LenStory - LenCut Then
-        Selection.InsertAfter (" ")
-        Selection.Move wdCharacter, -1
+        selection.InsertAfter (" ")
+        selection.Move wdCharacter, -1
     End If
 End Function
 
@@ -3595,10 +3770,10 @@ Private Sub ChangeFields()
             objFld.ShowCodes = True
             'I hate using Selection here, but it's probably the most straightforward way To Do this. Select the field, find its start, And Then move the cursor over so that it sits right before the 'R' in REF.
             objFld.Select
-            Selection.Collapse wdCollapseStart
-            Selection.MoveStartUntil "R"
+            selection.Collapse wdCollapseStart
+            selection.MoveStartUntil "R"
             'Type 'PAGE' To turn 'REF' into 'PAGEREF'. This turns a text reference into a page number reference.
-            Selection.TypeText "PAGE"
+            selection.TypeText "PAGE"
             'Update the field so the change is reflected in the document.
             objFld.Update
             objFld.ShowCodes = True
@@ -4028,12 +4203,12 @@ Public Sub RemoveSpaces_RibbonFun(ByVal control As IRibbonControl)
     ur.StartCustomRecord "删除多余空格"
     
     ' 判断是否有选中文本
-    If Selection.Type <> wdSelectionIP Then
+    If selection.Type <> wdSelectionIP Then
         ' 如果有选中文本，只在选区内操作
-        Set myRange = Selection.Range
+        Set myRange = selection.Range
     Else
         ' 如果没有选中文本，在整个文档操作
-        Set myRange = ActiveDocument.Content
+        Set myRange = ActiveDocument.content
         response = MsgBox("没有选中文本，将在整个文档中清理空格。" & vbCrLf & _
                          "是否继续？", vbQuestion + vbYesNoCancel, "确认继续操作")
         ' 检查用户选择
@@ -4199,10 +4374,10 @@ Public Sub ReplacePunctuationInChinese_RibbonFun(ByVal control As IRibbonControl
     ur.StartCustomRecord "替换英文标点"
     
     ' 判断是否有选中文本
-    If Selection.Type <> wdSelectionIP Then
-        Set myRange = Selection.Range
+    If selection.Type <> wdSelectionIP Then
+        Set myRange = selection.Range
     Else
-        Set myRange = ActiveDocument.Content
+        Set myRange = ActiveDocument.content
         response = MsgBox("没有选中文本，将在整个文档中替换英文标点。" & vbCrLf & _
                          "是否继续？", vbQuestion + vbYesNoCancel, "确认继续操作")
         ' 检查用户选择

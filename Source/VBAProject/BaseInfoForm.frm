@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} BaseInfoForm 
    Caption         =   "论文基础信息"
-   ClientHeight    =   9015.001
+   ClientHeight    =   9016.001
    ClientLeft      =   105
-   ClientTop       =   450
-   ClientWidth     =   8010
+   ClientTop       =   448
+   ClientWidth     =   8008
    OleObjectBlob   =   "BaseInfoForm.frx":0000
    StartUpPosition =   1  '所有者中心
 End
@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 
 Private Sub OkBtn_Click() ' 确定按钮
     Dim ur  As UndoRecord
@@ -76,34 +77,26 @@ Private Sub CancelBtn_Click() ' 取消按钮
 End Sub
 
 Private Function GetContentControl(title As String) As String
+    On Error GoTo ErrorHandler
+    
     Dim cc As ContentControl
+    Dim content As String
     
-    ' 通过标题(Title)查找并更新内容控件
-    On Error Resume Next
     Set cc = ActiveDocument.SelectContentControlsByTitle(title).item(1)
-    On Error GoTo 0
-    GetContentControl = cc.Range.text
-End Function
-
-Private Sub UpdateContentControl(title As String, val As String)
-    Dim cc As ContentControl
+    content = cc.Range.text
     
-    ' 通过标题(Title)查找并更新内容控件
-    On Error Resume Next
-    Set cc = ActiveDocument.SelectContentControlsByTitle(title).item(1)
-    On Error GoTo 0
-    
-    If Not cc Is Nothing Then
-        ' 或者使用以下方式设置纯文本内容控件的值
-        cc.LockContents = False ' 先解锁(如果需要)
-        cc.Range.text = val
-        cc.LockContents = True ' 重新锁定(如果需要)
-        
-        'MsgBox "内容控件已更新!", vbInformation, C_TITLE
+    ' 去除首尾空格后检查是否为空
+    If Trim(content) = "" Then
+        GetContentControl = ""
     Else
-        MsgBox "未找到指定标题的内容控件!", vbExclamation, C_TITLE
+        GetContentControl = content
     End If
-End Sub
+    
+    Exit Function
+    
+ErrorHandler:
+    GetContentControl = ""
+End Function
 
 
 Private Sub UserForm_Initialize()
