@@ -12,9 +12,9 @@
 
   可以从 [Github](https://github.com/sk8boy/cuit_thesis_template) 和 [Gitee](https://gitee.com/tiejunwang/cuit_thesis_template) 上免费获得该模版。直接访问下面的链接，可下载模板的最新版本。
 
-  https://github.com/sk8boy/cuit_thesis_template/releases/latest
+  - https://github.com/sk8boy/cuit_thesis_template/releases/latest
 
-  https://gitee.com/tiejunwang/cuit_thesis_template/releases/latest
+  - https://gitee.com/tiejunwang/cuit_thesis_template/releases/latest
 
 - 从模板菜单中获取
 
